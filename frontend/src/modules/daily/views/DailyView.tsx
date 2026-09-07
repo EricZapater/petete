@@ -31,12 +31,14 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
 import HistoryIcon from '@mui/icons-material/History';
 import { Navbar } from '../../../components/Navbar';
+import { useTranslation } from 'react-i18next';
 import { useDailyStore } from '../store';
 import { ExecutorType } from '../types';
 import { useMastersStore } from '../../masters/store';
 import { ItemStatus } from '../../masters/types';
 
 export const DailyView: React.FC = () => {
+  const { t } = useTranslation();
   const {
     accions,
     openOnly,
@@ -103,7 +105,7 @@ export const DailyView: React.FC = () => {
         comentari: input.comentari || '',
       });
       setLogInputs((prev) => ({ ...prev, [accioId]: { hores: '', comentari: '' } }));
-      setSuccessToast("Hores imputades correctament a l'acció!");
+      setSuccessToast(t('daily.logSuccess', "Hores imputades correctament a l'acció!"));
     } catch {
       // Handled by store
     }
@@ -134,7 +136,7 @@ export const DailyView: React.FC = () => {
     setAccioExecutor('jo');
     setAccioEtiquetes('');
     setAccioDataPrevista('');
-    setSuccessToast('Nova acció donada de alta amb èxit!');
+    setSuccessToast(t('daily.createSuccess', "Nova acció donada d'alta amb èxit!"));
   };
 
   const toggleHistory = (id: string) => {
@@ -144,13 +146,13 @@ export const DailyView: React.FC = () => {
   const getStatusChip = (status: ItemStatus) => {
     switch (status) {
       case 'pendent':
-        return <Chip label="Pendent" size="small" color="warning" variant="outlined" />;
+        return <Chip label={t('common.statusPending', 'Pendent')} size="small" color="warning" variant="outlined" />;
       case 'en_curs':
-        return <Chip label="En Curs" size="small" color="info" />;
+        return <Chip label={t('common.statusInProgress', 'En Curs')} size="small" color="info" />;
       case 'bloquejat':
-        return <Chip label="Bloquejat" size="small" color="error" />;
+        return <Chip label={t('common.statusBlocked', 'Bloquejat')} size="small" color="error" />;
       case 'tancat':
-        return <Chip label="Tancat" size="small" color="success" />;
+        return <Chip label={t('common.statusClosed', 'Tancat')} size="small" color="success" />;
       default:
         return <Chip label={status} size="small" />;
     }
@@ -166,10 +168,10 @@ export const DailyView: React.FC = () => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
           <div>
             <Typography variant="h5" component="h1" fontWeight={700} color="text.primary">
-              Seguiment Diari d'Accions
+              {t('daily.title', "Seguiment Diari d'Accions")}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              Registra hores i comentaris de la teva feina d'avui ({new Date().toLocaleDateString()})
+              {t('daily.subtitle', { date: new Date().toLocaleDateString(), defaultValue: "Registra hores i comentaris de la teva feina d'avui" })}
             </Typography>
           </div>
           <Button
@@ -181,7 +183,7 @@ export const DailyView: React.FC = () => {
             }}
             sx={{ fontWeight: 600 }}
           >
-            + Nova Acció
+            {t('daily.newActionBtn', '+ Nova Acció')}
           </Button>
         </Box>
 
@@ -189,13 +191,13 @@ export const DailyView: React.FC = () => {
         <Paper sx={{ p: 2, mb: 3, borderRadius: 2, display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
             <FormControl size="small" sx={{ minWidth: 180 }}>
-              <InputLabel>Client</InputLabel>
+              <InputLabel>{t('common.client', 'Client')}</InputLabel>
               <Select
                 value={selectedClientId}
-                label="Client"
+                label={t('common.client', 'Client')}
                 onChange={(e) => setSelectedClientId(e.target.value)}
               >
-                <MenuItem value="">Tots els Clients</MenuItem>
+                <MenuItem value="">{t('common.allClients', 'Tots els Clients')}</MenuItem>
                 {clients.map((c) => (
                   <MenuItem key={c.id} value={c.id}>
                     {c.nom}
@@ -205,22 +207,22 @@ export const DailyView: React.FC = () => {
             </FormControl>
 
             <FormControl size="small" sx={{ minWidth: 150 }}>
-              <InputLabel>Executor</InputLabel>
+              <InputLabel>{t('common.executor', 'Executor')}</InputLabel>
               <Select
                 value={selectedExecutor}
-                label="Executor"
+                label={t('common.executor', 'Executor')}
                 onChange={(e) => setSelectedExecutor(e.target.value)}
               >
-                <MenuItem value="">Tots els Executors</MenuItem>
-                <MenuItem value="jo">Jo (Engineering Manager)</MenuItem>
-                <MenuItem value="equip">Equip</MenuItem>
+                <MenuItem value="">{t('common.allExecutors', 'Tots els Executors')}</MenuItem>
+                <MenuItem value="jo">{t('common.executorMe', 'Jo (Engineering Manager)')}</MenuItem>
+                <MenuItem value="equip">{t('common.executorTeam', 'Equip')}</MenuItem>
               </Select>
             </FormControl>
           </Box>
 
           <FormControlLabel
             control={<Switch checked={!openOnly} onChange={(e) => setOpenOnly(!e.target.checked)} color="primary" />}
-            label={<Typography variant="body2">Mostrar accions tancades</Typography>}
+            label={<Typography variant="body2">{t('daily.openOnly', 'Només obertes')}</Typography>}
           />
         </Paper>
 
@@ -244,9 +246,9 @@ export const DailyView: React.FC = () => {
         {/* Action Cards List */}
         {accions.length === 0 ? (
           <Card sx={{ p: 5, textAlign: 'center', borderRadius: 2, color: 'text.secondary' }}>
-            <Typography variant="h6">No hi ha accions per mostrar amb aquests filtres.</Typography>
+            <Typography variant="h6">{t('daily.emptyState', 'No hi ha accions per mostrar amb aquests filtres.')}</Typography>
             <Typography variant="body2" sx={{ mt: 1 }}>
-              Fes clic a "+ Nova Acció" per crear una tasca planificada o ad-hoc.
+              {t('daily.newActionBtn', '+ Nova Acció')}
             </Typography>
           </Card>
         ) : (
@@ -276,12 +278,12 @@ export const DailyView: React.FC = () => {
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1, alignItems: 'center' }}>
                           <Chip label={a.client_nom} size="small" sx={{ bgcolor: '#e3f2fd', color: '#0d47a1', fontWeight: 600 }} />
                           {a.iniciativa_nom ? (
-                            <Chip label={`Iniciativa: ${a.iniciativa_nom}`} size="small" sx={{ bgcolor: '#ede7f6', color: '#4a148c' }} />
+                            <Chip label={`${t('common.initiative', 'Iniciativa')}: ${a.iniciativa_nom}`} size="small" sx={{ bgcolor: '#ede7f6', color: '#4a148c' }} />
                           ) : (
                             <Chip label="⚡ Feina Ad-hoc" size="small" sx={{ bgcolor: '#fff3e0', color: '#e65100', fontWeight: 600 }} />
                           )}
-                          {a.equip_nom && <Chip label={`Equip: ${a.equip_nom}`} size="small" variant="outlined" />}
-                          <Chip label={`Executor: ${a.executor === 'jo' ? 'Jo' : 'Equip'}`} size="small" sx={{ bgcolor: '#f5f5f5' }} />
+                          {a.equip_nom && <Chip label={`${t('common.team', 'Equip')}: ${a.equip_nom}`} size="small" variant="outlined" />}
+                          <Chip label={`${t('common.executor', 'Executor')}: ${a.executor === 'jo' ? 'Jo' : t('common.executorTeam', 'Equip')}`} size="small" sx={{ bgcolor: '#f5f5f5' }} />
                           {getStatusChip(a.estat)}
                           {a.etiquetes.map((tag) => (
                             <Chip key={tag} label={`#${tag}`} size="small" variant="outlined" sx={{ fontSize: '0.75rem' }} />
@@ -291,11 +293,11 @@ export const DailyView: React.FC = () => {
 
                       <Box sx={{ textAlign: 'right', minWidth: 120 }}>
                         <Typography variant="subtitle2" fontWeight={700} color="primary.main">
-                          Acumulat: {a.total_hores || 0} h
+                          {t('common.hours', 'Hores')}: {a.total_hores || 0} h
                         </Typography>
                         {a.data_prevista_tancament && (
                           <Typography variant="caption" color="text.secondary">
-                            Previst: {a.data_prevista_tancament}
+                            {a.data_prevista_tancament}
                           </Typography>
                         )}
                       </Box>
@@ -306,7 +308,7 @@ export const DailyView: React.FC = () => {
                       <TextField
                         size="small"
                         type="number"
-                        placeholder="Hores"
+                        placeholder={t('daily.logHoursPlaceholder', 'Hores')}
                         inputProps={{ step: '0.25', min: '0.1', max: '24' }}
                         sx={{ width: 100 }}
                         value={currentInput.hores}
@@ -314,7 +316,7 @@ export const DailyView: React.FC = () => {
                       />
                       <TextField
                         size="small"
-                        placeholder="Comentari de la dedicació d'avui..."
+                        placeholder={t('daily.commentPlaceholder', "Comentari de la dedicació d'avui...")}
                         sx={{ flexGrow: 1, minWidth: 220 }}
                         value={currentInput.comentari}
                         onChange={(e) => handleLogInputCommentChange(a.id, e.target.value)}
@@ -330,7 +332,7 @@ export const DailyView: React.FC = () => {
                         onClick={() => handleQuickLog(a.id)}
                         sx={{ fontWeight: 600, textTransform: 'none' }}
                       >
-                        Imputar
+                        {t('daily.logBtn', 'Imputar')}
                       </Button>
 
                       {a.estat !== 'tancat' ? (
@@ -342,7 +344,7 @@ export const DailyView: React.FC = () => {
                           onClick={() => toggleCloseAccio(a.id, a.estat)}
                           sx={{ fontWeight: 600, textTransform: 'none' }}
                         >
-                          Tancar
+                          {t('common.close', 'Tancar')}
                         </Button>
                       ) : (
                         <Button
@@ -353,11 +355,11 @@ export const DailyView: React.FC = () => {
                           onClick={() => toggleCloseAccio(a.id, a.estat)}
                           sx={{ fontWeight: 600, textTransform: 'none' }}
                         >
-                          Reobrir
+                          {t('common.reopen', 'Reobrir')}
                         </Button>
                       )}
 
-                      <IconButton size="small" onClick={() => toggleHistory(a.id)} color="primary" title="Històric de registres">
+                      <IconButton size="small" onClick={() => toggleHistory(a.id)} color="primary" title={t('daily.historyToggle', { count: a.recent_registres?.length || 0, defaultValue: 'Històric' })}>
                         <HistoryIcon fontSize="small" />
                         {isHistoryOpen ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
                       </IconButton>
@@ -367,7 +369,7 @@ export const DailyView: React.FC = () => {
                     <Collapse in={isHistoryOpen} sx={{ mt: 2 }}>
                       <Paper sx={{ p: 2, bgcolor: '#fafbfc', borderRadius: 1.5, border: '1px solid #edf0f2' }}>
                         <Typography variant="caption" fontWeight={700} color="text.secondary" textTransform="uppercase">
-                          Històric de Registres i Comentaris
+                          {t('daily.historyToggle', { count: a.recent_registres?.length || 0, defaultValue: 'Històric' })}
                         </Typography>
                         {a.recent_registres && a.recent_registres.length > 0 ? (
                           <Stack spacing={1} sx={{ mt: 1 }}>
@@ -378,7 +380,7 @@ export const DailyView: React.FC = () => {
                                     {r.data}:
                                   </Typography>{' '}
                                   <Typography component="span" variant="body2">
-                                    {r.comentari || 'Sense comentari'}
+                                    {r.comentari || '—'}
                                   </Typography>
                                 </div>
                                 <Typography variant="caption" fontWeight={700} color="primary.main">
@@ -389,7 +391,7 @@ export const DailyView: React.FC = () => {
                           </Stack>
                         ) : (
                           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                            Encara no hi ha registres diaris per a aquesta acció.
+                            {t('daily.noHistory', 'Encara no hi ha registres per a aquesta acció.')}
                           </Typography>
                         )}
                       </Paper>
@@ -404,12 +406,13 @@ export const DailyView: React.FC = () => {
 
       {/* DIALOG: NOVA ACCIÓ */}
       <Dialog open={openNewAccioDialog} onClose={() => setOpenNewAccioDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Donar d'Alta Nova Acció</DialogTitle>
+        <DialogTitle>{t('daily.newActionDialogTitle', "Donar d'Alta Nova Acció")}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Nom de l'Acció *"
+            label={`${t('daily.actionNameLabel', "Nom de l'Acció")} *`}
+            placeholder={t('daily.actionNamePlaceholder', "Ex: Revisar PRs")}
             fullWidth
             value={accioNom}
             onChange={(e) => setAccioNom(e.target.value)}
@@ -418,10 +421,10 @@ export const DailyView: React.FC = () => {
 
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
             <FormControl fullWidth margin="dense">
-              <InputLabel>Client *</InputLabel>
+              <InputLabel>{`${t('common.client', 'Client')} *`}</InputLabel>
               <Select
                 value={accioClientId}
-                label="Client *"
+                label={`${t('common.client', 'Client')} *`}
                 onChange={(e) => setAccioClientId(e.target.value)}
               >
                 {clients.map((c) => (
@@ -433,13 +436,13 @@ export const DailyView: React.FC = () => {
             </FormControl>
 
             <FormControl fullWidth margin="dense">
-              <InputLabel>Iniciativa (opcional)</InputLabel>
+              <InputLabel>{t('daily.selectInitiativeOptional', 'Iniciativa (opcional)')}</InputLabel>
               <Select
                 value={accioIniciativaId}
-                label="Iniciativa (opcional)"
+                label={t('daily.selectInitiativeOptional', 'Iniciativa (opcional)')}
                 onChange={(e) => setAccioIniciativaId(e.target.value)}
               >
-                <MenuItem value="">-- Feina Ad-hoc (Sense Iniciativa) --</MenuItem>
+                <MenuItem value="">{t('daily.noInitiativeAdHoc', '-- Feina Ad-hoc (Sense Iniciativa) --')}</MenuItem>
                 {iniciatives.map((i) => (
                   <MenuItem key={i.id} value={i.id}>
                     {i.nom}
@@ -451,13 +454,13 @@ export const DailyView: React.FC = () => {
 
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
             <FormControl fullWidth margin="dense">
-              <InputLabel>Equip (opcional)</InputLabel>
+              <InputLabel>{t('daily.selectTeamOptional', 'Equip (opcional)')}</InputLabel>
               <Select
                 value={accioEquipId}
-                label="Equip (opcional)"
+                label={t('daily.selectTeamOptional', 'Equip (opcional)')}
                 onChange={(e) => setAccioEquipId(e.target.value)}
               >
-                <MenuItem value="">-- Sense Equip Assignat --</MenuItem>
+                <MenuItem value="">{t('daily.noTeam', '-- Sense Equip Assignat --')}</MenuItem>
                 {equips.map((eq) => (
                   <MenuItem key={eq.id} value={eq.id}>
                     {eq.nom}
@@ -467,21 +470,22 @@ export const DailyView: React.FC = () => {
             </FormControl>
 
             <FormControl fullWidth margin="dense">
-              <InputLabel>Executor</InputLabel>
+              <InputLabel>{t('common.executor', 'Executor')}</InputLabel>
               <Select
                 value={accioExecutor}
-                label="Executor"
+                label={t('common.executor', 'Executor')}
                 onChange={(e) => setAccioExecutor(e.target.value as ExecutorType)}
               >
-                <MenuItem value="jo">Jo (Engineering Manager)</MenuItem>
-                <MenuItem value="equip">Equip</MenuItem>
+                <MenuItem value="jo">{t('common.executorMe', 'Jo (Engineering Manager)')}</MenuItem>
+                <MenuItem value="equip">{t('common.executorTeam', 'Equip')}</MenuItem>
               </Select>
             </FormControl>
           </Box>
 
           <TextField
             margin="dense"
-            label="Etiquetes (separades per comes, ex: backend, urgencia, client)"
+            label={t('daily.tagsLabel', 'Etiquetes')}
+            placeholder={t('daily.tagsPlaceholder', 'ex: backend, urgencia, client')}
             fullWidth
             value={accioEtiquetes}
             onChange={(e) => setAccioEtiquetes(e.target.value)}
@@ -490,7 +494,7 @@ export const DailyView: React.FC = () => {
 
           <TextField
             margin="dense"
-            label="Data Prevista de Tancament (opcional)"
+            label={t('daily.expectedDateLabel', 'Data Prevista de Tancament')}
             type="date"
             fullWidth
             InputLabelProps={{ shrink: true }}
@@ -499,9 +503,9 @@ export const DailyView: React.FC = () => {
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setOpenNewAccioDialog(false)}>Cancel·lar</Button>
+          <Button onClick={() => setOpenNewAccioDialog(false)}>{t('common.cancel', 'Cancel·lar')}</Button>
           <Button variant="contained" onClick={handleCreateAccio} disabled={!accioNom || (!accioClientId && !accioIniciativaId)}>
-            Crear Acció
+            {t('daily.createActionSubmit', 'Crear Acció')}
           </Button>
         </DialogActions>
       </Dialog>

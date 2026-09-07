@@ -35,10 +35,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { Navbar } from '../../../components/Navbar';
+import { useTranslation } from 'react-i18next';
 import { useMastersStore } from '../store';
 import { Client, Equip, Iniciativa, ItemStatus, Metrica, Objectiu } from '../types';
 
 export const MastersView: React.FC = () => {
+  const { t } = useTranslation();
   const {
     clients,
     equips,
@@ -251,13 +253,13 @@ export const MastersView: React.FC = () => {
   const getStatusChip = (status: ItemStatus) => {
     switch (status) {
       case 'pendent':
-        return <Chip label="Pendent" size="small" color="warning" variant="outlined" />;
+        return <Chip label={t('common.statusPending', 'Pendent')} size="small" color="warning" variant="outlined" />;
       case 'en_curs':
-        return <Chip label="En Curs" size="small" color="info" />;
+        return <Chip label={t('common.statusInProgress', 'En Curs')} size="small" color="info" />;
       case 'bloquejat':
-        return <Chip label="Bloquejat" size="small" color="error" />;
+        return <Chip label={t('common.statusBlocked', 'Bloquejat')} size="small" color="error" />;
       case 'tancat':
-        return <Chip label="Tancat" size="small" color="success" />;
+        return <Chip label={t('common.statusClosed', 'Tancat')} size="small" color="success" />;
       default:
         return <Chip label={status} size="small" />;
     }
@@ -283,7 +285,7 @@ export const MastersView: React.FC = () => {
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
           <Typography variant="h5" component="h1" fontWeight={700} color="text.primary">
-            Gestió de Mestres
+            {t('masters.title', 'Gestió de Mestres')}
           </Typography>
           {activeTab === 0 && (
             <Button
@@ -295,7 +297,7 @@ export const MastersView: React.FC = () => {
                 setOpenClientDialog(true);
               }}
             >
-              + Nou Client
+              {t('masters.newClientBtn', '+ Nou Client')}
             </Button>
           )}
           {activeTab === 1 && (
@@ -308,7 +310,7 @@ export const MastersView: React.FC = () => {
                 setOpenEquipDialog(true);
               }}
             >
-              + Nou Equip
+              {t('masters.newTeamBtn', '+ Nou Equip')}
             </Button>
           )}
           {activeTab === 2 && (
@@ -324,7 +326,7 @@ export const MastersView: React.FC = () => {
                 setOpenObjectiuDialog(true);
               }}
             >
-              + Nou Objectiu
+              {t('masters.newObjectiveBtn', '+ Nou Objectiu')}
             </Button>
           )}
           {activeTab === 3 && (
@@ -339,7 +341,7 @@ export const MastersView: React.FC = () => {
                 setOpenIniciativaDialog(true);
               }}
             >
-              + Nova Iniciativa
+              {t('masters.newInitiativeBtn', '+ Nova Iniciativa')}
             </Button>
           )}
           {activeTab === 4 && (
@@ -355,7 +357,7 @@ export const MastersView: React.FC = () => {
                 setOpenMetricaDialog(true);
               }}
             >
-              + Nova Mètrica
+              {t('masters.newMetricBtn', '+ Nova Mètrica')}
             </Button>
           )}
         </Box>
@@ -374,11 +376,11 @@ export const MastersView: React.FC = () => {
             scrollButtons="auto"
             sx={{ borderBottom: 1, borderColor: 'divider', px: 2, pt: 1 }}
           >
-            <Tab label="1. Clients" sx={{ fontWeight: 600 }} />
-            <Tab label="2. Equips" sx={{ fontWeight: 600 }} />
-            <Tab label="3. Objectius" sx={{ fontWeight: 600 }} />
-            <Tab label="4. Iniciatives" sx={{ fontWeight: 600 }} />
-            <Tab label="5. Mètriques" sx={{ fontWeight: 600 }} />
+            <Tab label={t('masters.tabClients', '1. Clients')} sx={{ fontWeight: 600 }} />
+            <Tab label={t('masters.tabTeams', '2. Equips')} sx={{ fontWeight: 600 }} />
+            <Tab label={t('masters.tabObjectives', '3. Objectius')} sx={{ fontWeight: 600 }} />
+            <Tab label={t('masters.tabInitiatives', '4. Iniciatives')} sx={{ fontWeight: 600 }} />
+            <Tab label={t('masters.tabMetrics', '5. Mètriques')} sx={{ fontWeight: 600 }} />
           </Tabs>
 
           <CardContent sx={{ p: 0 }}>
@@ -388,17 +390,17 @@ export const MastersView: React.FC = () => {
                 <Table>
                   <TableHead sx={{ bgcolor: '#fafafa' }}>
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 700 }}>Nom del Client</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Estat</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Creat el</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 700 }}>Accions</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.nameLabel', 'Nom')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('common.status', 'Estat')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('common.date', 'Data')}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 700 }}>{t('common.actions', 'Accions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {clients.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={4} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                          Cap client registrat. Fes clic a "+ Nou Client" per afegir-ne un.
+                          {t('masters.newClientBtn', '+ Nou Client')}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -407,9 +409,9 @@ export const MastersView: React.FC = () => {
                           <TableCell sx={{ fontWeight: 600 }}>{c.nom}</TableCell>
                           <TableCell>
                             {c.actiu ? (
-                              <Chip label="Actiu" color="success" size="small" />
+                              <Chip label={t('common.active', 'Actiu')} color="success" size="small" />
                             ) : (
-                              <Chip label="Inactiu" size="small" />
+                              <Chip label={t('common.inactive', 'Inactiu')} size="small" />
                             )}
                           </TableCell>
                           <TableCell>{new Date(c.created_at).toLocaleDateString()}</TableCell>
@@ -435,16 +437,16 @@ export const MastersView: React.FC = () => {
                 <Table>
                   <TableHead sx={{ bgcolor: '#fafafa' }}>
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 700 }}>Nom de l'Equip</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Client Assignat</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 700 }}>Accions</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.teamName', "Nom de l'Equip")}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.assignedClient', 'Client Assignat')}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 700 }}>{t('common.actions', 'Accions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {equips.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={3} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                          Cap equip creat. Fes clic a "+ Nou Equip" per crear-ne un.
+                          {t('masters.emptyTeams', 'Cap equip creat. Fes clic a "+ Nou Equip" per crear-ne un.')}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -474,18 +476,18 @@ export const MastersView: React.FC = () => {
                 <Table>
                   <TableHead sx={{ bgcolor: '#fafafa' }}>
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 700 }}>Objectiu</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Client</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Estat</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Data Prevista</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 700 }}>Accions</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('common.objective', 'Objectiu')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('common.client', 'Client')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('common.status', 'Estat')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.expectedDate', 'Data Prevista')}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 700 }}>{t('common.actions', 'Accions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {objectius.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                          Cap objectiu creat. Fes clic a "+ Nou Objectiu".
+                          {t('masters.emptyObjectives', 'Cap objectiu creat. Fes clic a "+ Nou Objectiu".')}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -517,18 +519,18 @@ export const MastersView: React.FC = () => {
                 <Table>
                   <TableHead sx={{ bgcolor: '#fafafa' }}>
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 700 }}>Iniciativa</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Objectiu Vinculat</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Estat</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Data Prevista</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 700 }}>Accions</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('common.initiative', 'Iniciativa')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.linkedObjective', 'Objectiu Vinculat')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('common.status', 'Estat')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.expectedDate', 'Data Prevista')}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 700 }}>{t('common.actions', 'Accions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {iniciatives.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                          Cap iniciativa creada. Fes clic a "+ Nova Iniciativa".
+                          {t('masters.emptyInitiatives', 'Cap iniciativa creada. Fes clic a "+ Nova Iniciativa".')}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -560,18 +562,18 @@ export const MastersView: React.FC = () => {
                 <Table>
                   <TableHead sx={{ bgcolor: '#fafafa' }}>
                     <TableRow>
-                      <TableCell sx={{ fontWeight: 700 }}>Mètrica</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Iniciativa</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Valor Actual / Objectiu</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Progrés</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 700 }}>Accions</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.metricName', 'Mètrica')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('common.initiative', 'Iniciativa')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.actualTargetValue', 'Valor Actual / Objectiu')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.progressLabel', 'Progrés')}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 700 }}>{t('common.actions', 'Accions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {metriques.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                          Cap mètrica creada. Fes clic a "+ Nova Mètrica".
+                          {t('masters.emptyMetrics', 'Cap mètrica creada. Fes clic a "+ Nova Mètrica".')}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -621,12 +623,12 @@ export const MastersView: React.FC = () => {
 
       {/* DIALOG: CLIENT */}
       <Dialog open={openClientDialog} onClose={() => setOpenClientDialog(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>{editingClient ? 'Editar Client' : 'Nou Client'}</DialogTitle>
+        <DialogTitle>{editingClient ? t('masters.clientDialogTitleEdit', 'Editar Client') : t('masters.clientDialogTitleNew', 'Nou Client')}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Nom del Client"
+            label={t('masters.clientName', 'Nom del Client')}
             fullWidth
             value={clientNom}
             onChange={(e) => setClientNom(e.target.value)}
@@ -636,26 +638,26 @@ export const MastersView: React.FC = () => {
             control={
               <Switch checked={clientActiu} onChange={(e) => setClientActiu(e.target.checked)} color="primary" />
             }
-            label="Client actiu"
+            label={t('masters.clientActive', 'Client actiu')}
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setOpenClientDialog(false)}>Cancel·lar</Button>
+          <Button onClick={() => setOpenClientDialog(false)}>{t('common.cancel', 'Cancel·lar')}</Button>
           <Button variant="contained" onClick={handleSaveClient} disabled={!clientNom}>
-            Desar
+            {t('common.save', 'Desar')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* DIALOG: EQUIP */}
       <Dialog open={openEquipDialog} onClose={() => setOpenEquipDialog(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>{editingEquip ? 'Editar Equip' : 'Nou Equip'}</DialogTitle>
+        <DialogTitle>{editingEquip ? t('masters.teamDialogTitleEdit', 'Editar Equip') : t('masters.teamDialogTitleNew', 'Nou Equip')}</DialogTitle>
         <DialogContent>
           <FormControl fullWidth margin="dense" sx={{ mt: 1, mb: 2 }}>
-            <InputLabel>Client</InputLabel>
+            <InputLabel>{t('common.client', 'Client')}</InputLabel>
             <Select
               value={equipClientId}
-              label="Client"
+              label={t('common.client', 'Client')}
               onChange={(e) => setEquipClientId(e.target.value)}
             >
               {clients.map((c) => (
@@ -667,29 +669,29 @@ export const MastersView: React.FC = () => {
           </FormControl>
           <TextField
             margin="dense"
-            label="Nom de l'Equip"
+            label={t('masters.teamName', "Nom de l'Equip")}
             fullWidth
             value={equipNom}
             onChange={(e) => setEquipNom(e.target.value)}
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setOpenEquipDialog(false)}>Cancel·lar</Button>
+          <Button onClick={() => setOpenEquipDialog(false)}>{t('common.cancel', 'Cancel·lar')}</Button>
           <Button variant="contained" onClick={handleSaveEquip} disabled={!equipNom || !equipClientId}>
-            Desar
+            {t('common.save', 'Desar')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* DIALOG: OBJECTIU */}
       <Dialog open={openObjectiuDialog} onClose={() => setOpenObjectiuDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingObjectiu ? 'Editar Objectiu' : 'Nou Objectiu'}</DialogTitle>
+        <DialogTitle>{editingObjectiu ? t('masters.objDialogTitleEdit', 'Editar Objectiu') : t('masters.objDialogTitleNew', 'Nou Objectiu')}</DialogTitle>
         <DialogContent>
           <FormControl fullWidth margin="dense" sx={{ mt: 1, mb: 2 }}>
-            <InputLabel>Client</InputLabel>
+            <InputLabel>{t('common.client', 'Client')}</InputLabel>
             <Select
               value={objectiuClientId}
-              label="Client"
+              label={t('common.client', 'Client')}
               onChange={(e) => setObjectiuClientId(e.target.value)}
             >
               {clients.map((c) => (
@@ -701,7 +703,7 @@ export const MastersView: React.FC = () => {
           </FormControl>
           <TextField
             margin="dense"
-            label="Nom de l'Objectiu"
+            label={t('masters.objectiveName', "Nom de l'Objectiu")}
             fullWidth
             value={objectiuNom}
             onChange={(e) => setObjectiuNom(e.target.value)}
@@ -709,7 +711,7 @@ export const MastersView: React.FC = () => {
           />
           <TextField
             margin="dense"
-            label="Descripció (opcional)"
+            label={t('masters.descriptionOptional', 'Descripció (opcional)')}
             fullWidth
             multiline
             rows={2}
@@ -718,21 +720,21 @@ export const MastersView: React.FC = () => {
             sx={{ mb: 2 }}
           />
           <FormControl fullWidth margin="dense" sx={{ mb: 2 }}>
-            <InputLabel>Estat</InputLabel>
+            <InputLabel>{t('common.status', 'Estat')}</InputLabel>
             <Select
               value={objectiuEstat}
-              label="Estat"
+              label={t('common.status', 'Estat')}
               onChange={(e) => setObjectiuEstat(e.target.value as ItemStatus)}
             >
-              <MenuItem value="pendent">Pendent</MenuItem>
-              <MenuItem value="en_curs">En Curs</MenuItem>
-              <MenuItem value="bloquejat">Bloquejat</MenuItem>
-              <MenuItem value="tancat">Tancat</MenuItem>
+              <MenuItem value="pendent">{t('common.statusPending', 'Pendent')}</MenuItem>
+              <MenuItem value="en_curs">{t('common.statusInProgress', 'En Curs')}</MenuItem>
+              <MenuItem value="bloquejat">{t('common.statusBlocked', 'Bloquejat')}</MenuItem>
+              <MenuItem value="tancat">{t('common.statusClosed', 'Tancat')}</MenuItem>
             </Select>
           </FormControl>
           <TextField
             margin="dense"
-            label="Data Prevista de Tancament"
+            label={t('masters.expectedCloseDate', 'Data Prevista de Tancament')}
             type="date"
             fullWidth
             InputLabelProps={{ shrink: true }}
@@ -741,9 +743,9 @@ export const MastersView: React.FC = () => {
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setOpenObjectiuDialog(false)}>Cancel·lar</Button>
+          <Button onClick={() => setOpenObjectiuDialog(false)}>{t('common.cancel', 'Cancel·lar')}</Button>
           <Button variant="contained" onClick={handleSaveObjectiu} disabled={!objectiuNom || !objectiuClientId}>
-            Desar
+            {t('common.save', 'Desar')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -752,30 +754,30 @@ export const MastersView: React.FC = () => {
       <Dialog open={Boolean(pendingCloseObjectiu)} onClose={() => setPendingCloseObjectiu(null)} maxWidth="xs" fullWidth>
         <DialogTitle sx={{ color: '#e65100', display: 'flex', alignItems: 'center', gap: 1 }}>
           <WarningAmberIcon />
-          Objectiu amb Iniciatives Obertes
+          {t('masters.rule4Warning', 'Objectiu amb Iniciatives Obertes')}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            L'objectiu <strong>"{pendingCloseObjectiu?.nom}"</strong> encara té iniciatives no tancades. Vols tancar l'objectiu igualment?
+            {t('masters.rule4ConfirmMessage', { name: pendingCloseObjectiu?.nom, defaultValue: `L'objectiu "${pendingCloseObjectiu?.nom}" encara té iniciatives no tancades. Vols tancar l'objectiu igualment?` })}
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setPendingCloseObjectiu(null)}>Cancel·lar</Button>
+          <Button onClick={() => setPendingCloseObjectiu(null)}>{t('common.cancel', 'Cancel·lar')}</Button>
           <Button variant="contained" color="warning" onClick={handleConfirmCloseObjectiu}>
-            Confirmar Tancament
+            {t('masters.confirmClose', 'Confirmar Tancament')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* DIALOG: INICIATIVA */}
       <Dialog open={openIniciativaDialog} onClose={() => setOpenIniciativaDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingIniciativa ? 'Editar Iniciativa' : 'Nova Iniciativa'}</DialogTitle>
+        <DialogTitle>{editingIniciativa ? t('masters.inicDialogTitleEdit', 'Editar Iniciativa') : t('masters.inicDialogTitleNew', 'Nova Iniciativa')}</DialogTitle>
         <DialogContent>
           <FormControl fullWidth margin="dense" sx={{ mt: 1, mb: 2 }}>
-            <InputLabel>Objectiu Vinculat</InputLabel>
+            <InputLabel>{t('masters.linkedObjective', 'Objectiu Vinculat')}</InputLabel>
             <Select
               value={iniciativaObjectiuId}
-              label="Objectiu Vinculat"
+              label={t('masters.linkedObjective', 'Objectiu Vinculat')}
               onChange={(e) => setIniciativaObjectiuId(e.target.value)}
             >
               {objectius.map((o) => (
@@ -787,28 +789,28 @@ export const MastersView: React.FC = () => {
           </FormControl>
           <TextField
             margin="dense"
-            label="Nom de la Iniciativa"
+            label={t('masters.initiativeName', 'Nom de la Iniciativa')}
             fullWidth
             value={iniciativaNom}
             onChange={(e) => setIniciativaNom(e.target.value)}
             sx={{ mb: 2 }}
           />
           <FormControl fullWidth margin="dense" sx={{ mb: 2 }}>
-            <InputLabel>Estat</InputLabel>
+            <InputLabel>{t('common.status', 'Estat')}</InputLabel>
             <Select
               value={iniciativaEstat}
-              label="Estat"
+              label={t('common.status', 'Estat')}
               onChange={(e) => setIniciativaEstat(e.target.value as ItemStatus)}
             >
-              <MenuItem value="pendent">Pendent</MenuItem>
-              <MenuItem value="en_curs">En Curs</MenuItem>
-              <MenuItem value="bloquejat">Bloquejat</MenuItem>
-              <MenuItem value="tancat">Tancat</MenuItem>
+              <MenuItem value="pendent">{t('common.statusPending', 'Pendent')}</MenuItem>
+              <MenuItem value="en_curs">{t('common.statusInProgress', 'En Curs')}</MenuItem>
+              <MenuItem value="bloquejat">{t('common.statusBlocked', 'Bloquejat')}</MenuItem>
+              <MenuItem value="tancat">{t('common.statusClosed', 'Tancat')}</MenuItem>
             </Select>
           </FormControl>
           <TextField
             margin="dense"
-            label="Data Prevista de Tancament"
+            label={t('masters.expectedCloseDate', 'Data Prevista de Tancament')}
             type="date"
             fullWidth
             InputLabelProps={{ shrink: true }}
@@ -817,22 +819,22 @@ export const MastersView: React.FC = () => {
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setOpenIniciativaDialog(false)}>Cancel·lar</Button>
+          <Button onClick={() => setOpenIniciativaDialog(false)}>{t('common.cancel', 'Cancel·lar')}</Button>
           <Button variant="contained" onClick={handleSaveIniciativa} disabled={!iniciativaNom || !iniciativaObjectiuId}>
-            Desar
+            {t('common.save', 'Desar')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* DIALOG: MÈTRICA */}
       <Dialog open={openMetricaDialog} onClose={() => setOpenMetricaDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingMetrica ? 'Editar Mètrica' : 'Nova Mètrica'}</DialogTitle>
+        <DialogTitle>{editingMetrica ? t('masters.metricDialogTitleEdit', 'Editar Mètrica') : t('masters.metricDialogTitleNew', 'Nova Mètrica')}</DialogTitle>
         <DialogContent>
           <FormControl fullWidth margin="dense" sx={{ mt: 1, mb: 2 }}>
-            <InputLabel>Iniciativa</InputLabel>
+            <InputLabel>{t('common.initiative', 'Iniciativa')}</InputLabel>
             <Select
               value={metricaIniciativaId}
-              label="Iniciativa"
+              label={t('common.initiative', 'Iniciativa')}
               onChange={(e) => setMetricaIniciativaId(e.target.value)}
             >
               {iniciatives.map((i) => (
@@ -844,7 +846,7 @@ export const MastersView: React.FC = () => {
           </FormControl>
           <TextField
             margin="dense"
-            label="Nom de la Mètrica"
+            label={t('masters.metricName', 'Nom de la Mètrica')}
             fullWidth
             value={metricaNom}
             onChange={(e) => setMetricaNom(e.target.value)}
@@ -852,7 +854,7 @@ export const MastersView: React.FC = () => {
           />
           <TextField
             margin="dense"
-            label="Unitat de Mesura (ex. %, h, dies, pts)"
+            label={t('masters.unitPlaceholder', 'Unitat de Mesura (ex. %, h, dies, pts)')}
             fullWidth
             value={metricaUnitat}
             onChange={(e) => setMetricaUnitat(e.target.value)}
@@ -861,14 +863,14 @@ export const MastersView: React.FC = () => {
           <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
             <TextField
               margin="dense"
-              label="Valor Actual"
+              label={t('masters.actualValLabel', 'Valor Actual')}
               type="number"
               value={metricaValAct}
               onChange={(e) => setMetricaValAct(Number(e.target.value))}
             />
             <TextField
               margin="dense"
-              label="Valor Objectiu"
+              label={t('masters.targetValLabel', 'Valor Objectiu')}
               type="number"
               value={metricaValObj}
               onChange={(e) => setMetricaValObj(Number(e.target.value))}
@@ -876,9 +878,9 @@ export const MastersView: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setOpenMetricaDialog(false)}>Cancel·lar</Button>
+          <Button onClick={() => setOpenMetricaDialog(false)}>{t('common.cancel', 'Cancel·lar')}</Button>
           <Button variant="contained" onClick={handleSaveMetrica} disabled={!metricaNom || !metricaIniciativaId}>
-            Desar
+            {t('common.save', 'Desar')}
           </Button>
         </DialogActions>
       </Dialog>

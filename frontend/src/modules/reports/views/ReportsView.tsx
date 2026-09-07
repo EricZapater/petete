@@ -30,10 +30,12 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import GroupIcon from '@mui/icons-material/Group';
 import { Navbar } from '../../../components/Navbar';
+import { useTranslation } from 'react-i18next';
 import { useReportsStore } from '../store';
 import { useMastersStore } from '../../masters/store';
 
 export const ReportsView: React.FC = () => {
+  const { t } = useTranslation();
   const {
     filters,
     summary,
@@ -76,10 +78,10 @@ export const ReportsView: React.FC = () => {
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3, flexWrap: 'wrap', gap: 2 }}>
           <div>
             <Typography variant="h5" component="h1" fontWeight={700} color="text.primary">
-              Vista Agregada & Informes
+              {t('reports.title', 'Vista Agregada & Informes')}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              Anàlisi de dedicació, KPIs de seguiment i exportació a full de càlcul Excel (.xlsx)
+              {t('reports.subtitle', 'Anàlisi de dedicació, KPIs de seguiment i exportació a full de càlcul Excel (.xlsx)')}
             </Typography>
           </div>
           <Button
@@ -91,7 +93,7 @@ export const ReportsView: React.FC = () => {
             onClick={downloadExcel}
             sx={{ fontWeight: 600 }}
           >
-            {isExporting ? 'Generant Excel...' : 'Exportar a Excel (.xlsx)'}
+            {isExporting ? t('reports.exportingBtn', 'Generant Excel...') : t('reports.exportBtn', 'Exportar a Excel (.xlsx)')}
           </Button>
         </Box>
 
@@ -100,7 +102,7 @@ export const ReportsView: React.FC = () => {
           <Grid container spacing={2} alignItems="center">
             <Grid item xs={12} sm={6} md={2}>
               <TextField
-                label="Des de"
+                label={t('reports.fromDate', 'Des de')}
                 type="date"
                 size="small"
                 fullWidth
@@ -111,7 +113,7 @@ export const ReportsView: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <TextField
-                label="Fins a"
+                label={t('reports.toDate', 'Fins a')}
                 type="date"
                 size="small"
                 fullWidth
@@ -122,13 +124,13 @@ export const ReportsView: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6} md={2.5}>
               <FormControl size="small" fullWidth>
-                <InputLabel>Client</InputLabel>
+                <InputLabel>{t('common.client', 'Client')}</InputLabel>
                 <Select
                   value={filters.client_id || ''}
-                  label="Client"
+                  label={t('common.client', 'Client')}
                   onChange={(e) => setFilters({ client_id: e.target.value, objectiu_id: '' })}
                 >
-                  <MenuItem value="">Tots els Clients</MenuItem>
+                  <MenuItem value="">{t('common.allClients', 'Tots els Clients')}</MenuItem>
                   {clients.map((c) => (
                     <MenuItem key={c.id} value={c.id}>
                       {c.nom}
@@ -139,13 +141,13 @@ export const ReportsView: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6} md={2.5}>
               <FormControl size="small" fullWidth>
-                <InputLabel>Objectiu</InputLabel>
+                <InputLabel>{t('common.objective', 'Objectiu')}</InputLabel>
                 <Select
                   value={filters.objectiu_id || ''}
-                  label="Objectiu"
+                  label={t('common.objective', 'Objectiu')}
                   onChange={(e) => setFilters({ objectiu_id: e.target.value })}
                 >
-                  <MenuItem value="">Tots els Objectius</MenuItem>
+                  <MenuItem value="">{t('common.allObjectives', 'Tots els Objectius')}</MenuItem>
                   {filteredObjectius.map((o) => (
                     <MenuItem key={o.id} value={o.id}>
                       {o.nom}
@@ -156,15 +158,15 @@ export const ReportsView: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <FormControl size="small" fullWidth>
-                <InputLabel>Executor</InputLabel>
+                <InputLabel>{t('common.executor', 'Executor')}</InputLabel>
                 <Select
                   value={filters.executor || ''}
-                  label="Executor"
+                  label={t('common.executor', 'Executor')}
                   onChange={(e) => setFilters({ executor: e.target.value as any })}
                 >
-                  <MenuItem value="">Tots (Jo + Equip)</MenuItem>
-                  <MenuItem value="jo">Jo (Engineering Manager)</MenuItem>
-                  <MenuItem value="equip">Equip</MenuItem>
+                  <MenuItem value="">{t('common.allExecutors', 'Tots els Executors')}</MenuItem>
+                  <MenuItem value="jo">{t('common.executorMe', 'Jo (Engineering Manager)')}</MenuItem>
+                  <MenuItem value="equip">{t('common.executorTeam', 'Equip')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -184,7 +186,7 @@ export const ReportsView: React.FC = () => {
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                       <Typography variant="caption" fontWeight={700} color="text.secondary" textTransform="uppercase">
-                        Hores Totals
+                        {t('reports.kpiTotalHours', 'Hores Totals')}
                       </Typography>
                       <AccessTimeIcon color="primary" fontSize="small" />
                     </Box>
@@ -192,7 +194,7 @@ export const ReportsView: React.FC = () => {
                       {summary?.total_hores ? summary.total_hores.toFixed(1) : '0.0'} h
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      En el període seleccionat
+                      {t('reports.kpiTotalHoursSub', 'En el període seleccionat')}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -203,7 +205,7 @@ export const ReportsView: React.FC = () => {
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                       <Typography variant="caption" fontWeight={700} color="text.secondary" textTransform="uppercase">
-                        Dedicació "Jo"
+                        {t('reports.kpiHoursMe', 'Dedicació "Jo"')}
                       </Typography>
                       <AssessmentIcon color="success" fontSize="small" />
                     </Box>
@@ -212,8 +214,8 @@ export const ReportsView: React.FC = () => {
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       {summary?.total_hores && summary.total_hores > 0
-                        ? `${((summary.hores_jo / summary.total_hores) * 100).toFixed(1)}% del total`
-                        : '0% del total'}
+                        ? t('reports.kpiHoursMeSub', { percent: ((summary.hores_jo / summary.total_hores) * 100).toFixed(1) })
+                        : '0%'}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -224,7 +226,7 @@ export const ReportsView: React.FC = () => {
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                       <Typography variant="caption" fontWeight={700} color="text.secondary" textTransform="uppercase">
-                        Accions Actives
+                        {t('reports.kpiActiveActions', 'Accions Actives')}
                       </Typography>
                       <GroupIcon color="warning" fontSize="small" />
                     </Box>
@@ -232,7 +234,7 @@ export const ReportsView: React.FC = () => {
                       {summary?.accions_en_curs ?? 0}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {summary?.total_accions ?? 0} accions totals
+                      {t('reports.kpiActiveActionsSub', { count: summary?.total_accions ?? 0 })}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -243,7 +245,7 @@ export const ReportsView: React.FC = () => {
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                       <Typography variant="caption" fontWeight={700} color="text.secondary" textTransform="uppercase">
-                        Accions Tancades
+                        {t('reports.kpiClosedActions', 'Accions Tancades')}
                       </Typography>
                       <CheckCircleOutlineIcon sx={{ color: '#9c27b0' }} fontSize="small" />
                     </Box>
@@ -252,8 +254,8 @@ export const ReportsView: React.FC = () => {
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       {summary?.total_accions && summary.total_accions > 0
-                        ? `${((summary.accions_tancades / summary.total_accions) * 100).toFixed(1)}% taxa tancament`
-                        : '0% taxa tancament'}
+                        ? t('reports.kpiClosedActionsSub', { percent: ((summary.accions_tancades / summary.total_accions) * 100).toFixed(1) })
+                        : '0%'}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -265,7 +267,7 @@ export const ReportsView: React.FC = () => {
               <Grid item xs={12} md={6}>
                 <Paper sx={{ p: 2.5, borderRadius: 2, height: '100%' }}>
                   <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>
-                    Dedicació per Client
+                    {t('reports.breakdownClients', 'Dedicació per Client')}
                   </Typography>
                   {summary?.dedicacio_clients && summary.dedicacio_clients.length > 0 ? (
                     summary.dedicacio_clients.map((dc) => (
@@ -287,7 +289,7 @@ export const ReportsView: React.FC = () => {
                     ))
                   ) : (
                     <Typography variant="body2" color="text.secondary">
-                      No hi ha dades registrades per als filtres seleccionats.
+                      {t('reports.noBreakdownData', 'No hi ha dades registrades per als filtres seleccionats.')}
                     </Typography>
                   )}
                 </Paper>
@@ -296,7 +298,7 @@ export const ReportsView: React.FC = () => {
               <Grid item xs={12} md={6}>
                 <Paper sx={{ p: 2.5, borderRadius: 2, height: '100%' }}>
                   <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>
-                    Dedicació per Objectiu
+                    {t('reports.breakdownObjectives', 'Dedicació per Objectiu')}
                   </Typography>
                   {summary?.dedicacio_objectius && summary.dedicacio_objectius.length > 0 ? (
                     summary.dedicacio_objectius.map((doGroup) => (
@@ -319,7 +321,7 @@ export const ReportsView: React.FC = () => {
                     ))
                   ) : (
                     <Typography variant="body2" color="text.secondary">
-                      No hi ha dades registrades per als filtres seleccionats.
+                      {t('reports.noBreakdownData', 'No hi ha dades registrades per als filtres seleccionats.')}
                     </Typography>
                   )}
                 </Paper>
@@ -329,20 +331,20 @@ export const ReportsView: React.FC = () => {
             {/* Detailed Table */}
             <Paper sx={{ p: 2.5, borderRadius: 2 }}>
               <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 2 }}>
-                Detall Cronològic d'Imputacions ({logs.length})
+                {t('reports.tableTitle', { count: logs.length, defaultValue: "Detall Cronològic d'Imputacions" })}
               </Typography>
               <TableContainer>
                 <Table size="small">
                   <TableHead>
                     <TableRow sx={{ backgroundColor: '#f8fafc' }}>
-                      <TableCell sx={{ fontWeight: 700 }}>Data</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Client</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Objectiu / Iniciativa</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Acció</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Equip</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Executor</TableCell>
-                      <TableCell sx={{ fontWeight: 700, textAlign: 'right' }}>Hores</TableCell>
-                      <TableCell sx={{ fontWeight: 700 }}>Comentari</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('reports.colDate', 'Data')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('reports.colClient', 'Client')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('reports.colObjectiveInitiative', 'Objectiu / Iniciativa')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('reports.colAction', 'Acció')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('reports.colTeam', 'Equip')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('reports.colExecutor', 'Executor')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700, textAlign: 'right' }}>{t('reports.colHours', 'Hores')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('reports.colComment', 'Comentari')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -365,7 +367,7 @@ export const ReportsView: React.FC = () => {
                           <TableCell>{log.equip_nom || '—'}</TableCell>
                           <TableCell>
                             <Chip
-                              label={log.executor === 'jo' ? 'Jo (EM)' : 'Equip'}
+                              label={log.executor === 'jo' ? 'Jo (EM)' : t('common.executorTeam', 'Equip')}
                               size="small"
                               color={log.executor === 'jo' ? 'primary' : 'default'}
                               variant={log.executor === 'jo' ? 'filled' : 'outlined'}
@@ -382,7 +384,7 @@ export const ReportsView: React.FC = () => {
                     ) : (
                       <TableRow>
                         <TableCell colSpan={8} align="center" sx={{ py: 3, color: 'text.secondary' }}>
-                          No s'han trobat línies de registre per al període i filtres seleccionats.
+                          {t('reports.emptyLogs', 'No s\'han trobat línies de registre per al període i filtres seleccionats.')}
                         </TableCell>
                       </TableRow>
                     )}

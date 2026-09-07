@@ -10,9 +10,11 @@ import {
   Typography,
 } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../modules/auth/store';
 
 export const Navbar: React.FC = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const { user } = useAuthStore();
 
@@ -45,7 +47,7 @@ export const Navbar: React.FC = () => {
           }}
         >
           <Typography variant="h6" component="span" fontWeight={800} letterSpacing={0.5}>
-            Petete
+            {t('app.title', 'Petete')}
           </Typography>
           <Typography
             variant="caption"
@@ -56,7 +58,7 @@ export const Navbar: React.FC = () => {
               fontSize: '0.75rem',
             }}
           >
-            Personal Time Tracker
+            {t('nav.subtitle', 'Personal Time Tracker')}
           </Typography>
         </Box>
 
@@ -78,7 +80,7 @@ export const Navbar: React.FC = () => {
               },
             }}
           >
-            Vista Diària
+            {t('nav.daily', 'Vista Diària')}
           </Button>
 
           <Button
@@ -97,7 +99,7 @@ export const Navbar: React.FC = () => {
               },
             }}
           >
-            Informes
+            {t('nav.reports', 'Informes')}
           </Button>
 
           <Button
@@ -116,11 +118,11 @@ export const Navbar: React.FC = () => {
               },
             }}
           >
-            Mestres
+            {t('nav.masters', 'Mestres')}
           </Button>
 
           {/* User Profile Avatar */}
-          <Tooltip title={user?.nom ? `${user.nom} (Perfil)` : 'El meu perfil'}>
+          <Tooltip title={user?.nom ? `${user.nom} (${t('nav.profile', 'Perfil')})` : t('nav.profile', 'El meu perfil')}>
             <IconButton
               component={RouterLink}
               to="/profile"
