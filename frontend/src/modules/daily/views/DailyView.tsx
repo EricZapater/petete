@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  AppBar,
   Box,
   Button,
   Card,
@@ -19,7 +18,6 @@ import {
   Select,
   Switch,
   TextField,
-  Toolbar,
   Typography,
   Alert,
   Snackbar,
@@ -27,12 +25,12 @@ import {
   Stack,
   Collapse,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
 import HistoryIcon from '@mui/icons-material/History';
+import { Navbar } from '../../../components/Navbar';
 import { useDailyStore } from '../store';
 import { ExecutorType } from '../types';
 import { useMastersStore } from '../../masters/store';
@@ -161,29 +159,7 @@ export const DailyView: React.FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f4f6f8' }}>
       {/* Top Navbar */}
-      <AppBar position="static" elevation={1}>
-        <Toolbar sx={{ px: { xs: 2, sm: 4 }, display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Typography variant="h6" component="div" fontWeight={700}>
-              Petete
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button component={RouterLink} to="/daily" sx={{ color: 'white', fontWeight: 700 }}>
-                Vista Diària
-              </Button>
-              <Button component={RouterLink} to="/reports" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Informes
-              </Button>
-              <Button component={RouterLink} to="/masters" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Mestres
-              </Button>
-              <Button component={RouterLink} to="/profile" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Perfil
-              </Button>
-            </Box>
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <Navbar />
 
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         {/* Header Title & Action Button */}
@@ -236,7 +212,7 @@ export const DailyView: React.FC = () => {
                 onChange={(e) => setSelectedExecutor(e.target.value)}
               >
                 <MenuItem value="">Tots els Executors</MenuItem>
-                <MenuItem value="jo">Jo (Engagement Manager)</MenuItem>
+                <MenuItem value="jo">Jo (Engineering Manager)</MenuItem>
                 <MenuItem value="equip">Equip</MenuItem>
               </Select>
             </FormControl>
@@ -497,7 +473,7 @@ export const DailyView: React.FC = () => {
                 label="Executor"
                 onChange={(e) => setAccioExecutor(e.target.value as ExecutorType)}
               >
-                <MenuItem value="jo">Jo (Engagement Manager)</MenuItem>
+                <MenuItem value="jo">Jo (Engineering Manager)</MenuItem>
                 <MenuItem value="equip">Equip</MenuItem>
               </Select>
             </FormControl>

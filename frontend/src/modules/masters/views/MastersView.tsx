@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  AppBar,
   Box,
   Button,
   Card,
@@ -26,17 +25,16 @@ import {
   TableRow,
   Tabs,
   TextField,
-  Toolbar,
   Typography,
   Chip,
   LinearProgress,
   IconButton,
   Alert,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { Navbar } from '../../../components/Navbar';
 import { useMastersStore } from '../store';
 import { Client, Equip, Iniciativa, ItemStatus, Metrica, Objectiu } from '../types';
 
@@ -280,29 +278,7 @@ export const MastersView: React.FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f4f6f8' }}>
       {/* Navbar */}
-      <AppBar position="static" elevation={1}>
-        <Toolbar sx={{ px: { xs: 2, sm: 4 }, display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Typography variant="h6" component="div" fontWeight={700}>
-              Petete
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button component={RouterLink} to="/daily" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Vista Diària
-              </Button>
-              <Button component={RouterLink} to="/reports" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Informes
-              </Button>
-              <Button component={RouterLink} to="/masters" sx={{ color: 'white', fontWeight: 600 }}>
-                Mestres
-              </Button>
-              <Button component={RouterLink} to="/profile" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Perfil
-              </Button>
-            </Box>
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <Navbar />
 
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>

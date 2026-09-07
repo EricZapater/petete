@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  AppBar,
   Box,
   Button,
   Card,
@@ -21,17 +20,16 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Toolbar,
   Typography,
   Alert,
   CircularProgress,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import GroupIcon from '@mui/icons-material/Group';
+import { Navbar } from '../../../components/Navbar';
 import { useReportsStore } from '../store';
 import { useMastersStore } from '../../masters/store';
 
@@ -64,29 +62,7 @@ export const ReportsView: React.FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f4f6f8' }}>
       {/* Navbar */}
-      <AppBar position="static" elevation={1}>
-        <Toolbar sx={{ px: { xs: 2, sm: 4 }, display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Typography variant="h6" component="div" fontWeight={700}>
-              Petete
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button component={RouterLink} to="/daily" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Vista Diària
-              </Button>
-              <Button component={RouterLink} to="/reports" sx={{ color: 'white', fontWeight: 700 }}>
-                Informes
-              </Button>
-              <Button component={RouterLink} to="/masters" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Mestres
-              </Button>
-              <Button component={RouterLink} to="/profile" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Perfil
-              </Button>
-            </Box>
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <Navbar />
 
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
         {/* Error notification */}
@@ -187,7 +163,7 @@ export const ReportsView: React.FC = () => {
                   onChange={(e) => setFilters({ executor: e.target.value as any })}
                 >
                   <MenuItem value="">Tots (Jo + Equip)</MenuItem>
-                  <MenuItem value="jo">Jo (Engagement Manager)</MenuItem>
+                  <MenuItem value="jo">Jo (Engineering Manager)</MenuItem>
                   <MenuItem value="equip">Equip</MenuItem>
                 </Select>
               </FormControl>

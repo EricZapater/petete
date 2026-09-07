@@ -1,11 +1,11 @@
 {
   "app": {
     "title": "Petete",
-    "subtitle": "Engagement Manager Tracking"
+    "subtitle": "Personal Time Tracker — Engineering Manager"
   },
   "auth": {
     "loginTitle": "Petete",
-    "loginSubtitle": "Engagement Manager Daily Tracking",
+    "loginSubtitle": "Personal Time Tracker — Engineering Manager",
     "email": "Correu electrònic",
     "password": "Contrasenya",
     "nom": "Nom complet",

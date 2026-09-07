@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  AppBar,
-  Avatar,
   Box,
   Button,
   Card,
@@ -9,14 +7,14 @@ import {
   Container,
   MenuItem,
   TextField,
-  Toolbar,
   Typography,
   Alert,
   CircularProgress,
   Snackbar,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Navbar } from '../../../components/Navbar';
 import { useAuthStore } from '../store';
 import { Language } from '../types';
 
@@ -52,50 +50,10 @@ export const ProfileView: React.FC = () => {
     navigate('/login');
   };
 
-  const getInitials = (name?: string) => {
-    if (!name) return 'U';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase();
-  };
-
   return (
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f4f6f8' }}>
       {/* Navbar */}
-      <AppBar position="static" elevation={1}>
-        <Toolbar sx={{ px: { xs: 2, sm: 4 }, display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-            <Typography variant="h6" component="div" fontWeight={700}>
-              Petete
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button component={RouterLink} to="/daily" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Vista Diària
-              </Button>
-              <Button component={RouterLink} to="/reports" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Informes
-              </Button>
-              <Button component={RouterLink} to="/masters" sx={{ color: 'rgba(255,255,255,0.75)' }}>
-                Mestres
-              </Button>
-              <Button component={RouterLink} to="/profile" sx={{ color: 'white', fontWeight: 600 }}>
-                Perfil
-              </Button>
-            </Box>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
-              {user?.nom}
-            </Typography>
-            <Avatar sx={{ bgcolor: 'primary.light', color: 'primary.dark', fontWeight: 700, width: 36, height: 36 }}>
-              {getInitials(user?.nom)}
-            </Avatar>
-          </Box>
-        </Toolbar>
-      </AppBar>
+      <Navbar />
 
       {/* Main Content */}
       <Container maxWidth="sm" sx={{ mt: 5, mb: 4 }}>
