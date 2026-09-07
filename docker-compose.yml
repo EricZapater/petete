@@ -1,0 +1,43 @@
+services:
+  petete-backend:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-ericzapater}/petete-backend:latest
+    container_name: petete-backend
+    restart: unless-stopped
+    env_file:
+      - .env.backend
+    environment:
+      - TZ=Europe/Madrid
+    networks:
+      - postgres-network
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.petete-backend.rule=Host(`api.petete.ericzapater.cat`)"
+      - "traefik.http.routers.petete-backend.entrypoints=websecure"
+      - "traefik.http.routers.petete-backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.petete-backend.service=petete-backend"
+      - "traefik.http.services.petete-backend.loadbalancer.server.port=8080"
+      - "traefik.docker.network=web"
+
+  petete-frontend:
+    image: ghcr.io/${GITHUB_REPOSITORY_OWNER:-ericzapater}/petete-frontend:latest
+    container_name: petete-frontend
+    restart: unless-stopped
+    env_file:
+      - .env.frontend
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.petete-frontend.rule=Host(`petete.ericzapater.cat`)"
+      - "traefik.http.routers.petete-frontend.entrypoints=websecure"
+      - "traefik.http.routers.petete-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.petete-frontend.service=petete-frontend"
+      - "traefik.http.services.petete-frontend.loadbalancer.server.port=80"
+      - "traefik.docker.network=web"
+
+networks:
+  web:
+    external: true
+  postgres-network:
+    external: true

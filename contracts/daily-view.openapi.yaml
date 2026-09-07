@@ -1,0 +1,479 @@
+openapi: 3.0.3
+info:
+  title: Petete API — Mòdul Vista Diària & Tracking
+  description: Contracte d'API per al seguiment d'Accions, registre diari d'hores i fil de comentaris.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Servidor de desenvolupament local
+
+security:
+  - BearerAuth: []
+
+paths:
+  /accions:
+    get:
+      summary: Llistar accions de l'usuari
+      operationId: listAccions
+      tags: [Accions]
+      parameters:
+        - name: open_only
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+          description: Si és true, només retorna accions no tancades (pendent, en_curs, bloquejat)
+        - name: client_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: iniciativa_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: executor
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [jo, equip]
+      responses:
+        '200':
+          description: Llista d'accions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccioWithStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      summary: Crear una nova acció (Planificada o Ad-hoc)
+      operationId: createAccio
+      tags: [Accions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccioRequest'
+      responses:
+        '201':
+          description: Acció creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accio'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /accions/{id}:
+    get:
+      summary: Obtenir una acció amb el seu històric de registres diaris
+      operationId: getAccio
+      tags: [Accions]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Dades de l'acció
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccioDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Actualitzar dades o canviar l'estat d'una acció (Tancar/Reobrir)
+      operationId: updateAccio
+      tags: [Accions]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccioRequest'
+      responses:
+        '200':
+          description: Acció actualitzada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Accio'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Esborrar una acció
+      operationId: deleteAccio
+      tags: [Accions]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+
+  /registres-diaris:
+    get:
+      summary: Llistar registres diaris d'hores
+      operationId: listRegistresDiaris
+      tags: [Registres Diaris]
+      parameters:
+        - name: accio_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: data
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Llista de registres diaris
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RegistreDiari'
+
+    post:
+      summary: Registrar hores i comentari diari per a una acció
+      operationId: createRegistreDiari
+      tags: [Registres Diaris]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRegistreDiariRequest'
+      responses:
+        '201':
+          description: Registre creat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistreDiari'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /registres-diaris/{id}:
+    patch:
+      summary: Actualitzar un registre diari d'hores/comentari
+      operationId: updateRegistreDiari
+      tags: [Registres Diaris]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRegistreDiariRequest'
+      responses:
+        '200':
+          $ref: '#/components/schemas/RegistreDiari'
+    delete:
+      summary: Esborrar un registre diari
+      operationId: deleteRegistreDiari
+      tags: [Registres Diaris]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    Unauthorized:
+      description: No autoritzat
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Recurs no trobat
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Dades invàlides
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Message:
+      description: Operació realitzada
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageResponse'
+
+  schemas:
+    ExecutorType:
+      type: string
+      enum: [jo, equip]
+      default: jo
+
+    ItemStatus:
+      type: string
+      enum: [pendent, en_curs, bloquejat, tancat]
+      default: en_curs
+
+    Accio:
+      type: object
+      required: [id, user_id, client_id, executor, nom, etiquetes, estat, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        iniciativa_id:
+          type: string
+          format: uuid
+          nullable: true
+        client_id:
+          type: string
+          format: uuid
+        equip_id:
+          type: string
+          format: uuid
+          nullable: true
+        executor:
+          $ref: '#/components/schemas/ExecutorType'
+        nom:
+          type: string
+        etiquetes:
+          type: array
+          items:
+            type: string
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    AccioWithStats:
+      allOf:
+        - $ref: '#/components/schemas/Accio'
+        - type: object
+          properties:
+            total_hores:
+              type: number
+              example: 4.5
+            client_nom:
+              type: string
+              example: Inditex Logistics
+            iniciativa_nom:
+              type: string
+              nullable: true
+              example: Arquitectura de Microserveis Go
+            equip_nom:
+              type: string
+              nullable: true
+              example: Supply Chain Core
+            recent_registres:
+              type: array
+              items:
+                $ref: '#/components/schemas/RegistreDiari'
+
+    AccioDetail:
+      allOf:
+        - $ref: '#/components/schemas/AccioWithStats'
+        - type: object
+          properties:
+            registres_diaris:
+              type: array
+              items:
+                $ref: '#/components/schemas/RegistreDiari'
+
+    CreateAccioRequest:
+      type: object
+      required: [nom]
+      properties:
+        nom:
+          type: string
+          minLength: 1
+          maxLength: 250
+        client_id:
+          type: string
+          format: uuid
+          description: Obligatori si iniciativa_id no està present
+        iniciativa_id:
+          type: string
+          format: uuid
+          description: Opcional (Regla 1 feina ad-hoc)
+        equip_id:
+          type: string
+          format: uuid
+        executor:
+          $ref: '#/components/schemas/ExecutorType'
+        etiquetes:
+          type: array
+          items:
+            type: string
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+
+    UpdateAccioRequest:
+      type: object
+      properties:
+        nom:
+          type: string
+        client_id:
+          type: string
+          format: uuid
+        iniciativa_id:
+          type: string
+          format: uuid
+        equip_id:
+          type: string
+          format: uuid
+        executor:
+          $ref: '#/components/schemas/ExecutorType'
+        etiquetes:
+          type: array
+          items:
+            type: string
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+
+    RegistreDiari:
+      type: object
+      required: [id, user_id, accio_id, data, hores, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        accio_id:
+          type: string
+          format: uuid
+        data:
+          type: string
+          format: date
+        hores:
+          type: number
+          example: 1.5
+        comentari:
+          type: string
+          example: Desenvolupat endpoint de registre d'hores
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateRegistreDiariRequest:
+      type: object
+      required: [accio_id, data, hores]
+      properties:
+        accio_id:
+          type: string
+          format: uuid
+        data:
+          type: string
+          format: date
+        hores:
+          type: number
+          minimum: 0.1
+          maximum: 24.0
+          example: 1.5
+        comentari:
+          type: string
+          example: Lliurament de sprint
+
+    UpdateRegistreDiariRequest:
+      type: object
+      properties:
+        data:
+          type: string
+          format: date
+        hores:
+          type: number
+        comentari:
+          type: string
+
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string

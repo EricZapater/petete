@@ -1,0 +1,237 @@
+openapi: 3.0.3
+info:
+  title: Petete Reports & Export API
+  version: 0.4.0
+  description: Endpoints per a la consulta d'informes agregats, KPIs i descàrrega de fulls de càlcul Excel (.xlsx).
+paths:
+  /api/v1/reports/summary:
+    get:
+      summary: Retorna el resum agregat de KPIs i desglossaments segons filtres
+      parameters:
+        - name: data_inici
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: data_fi
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: client_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: objectiu_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: iniciativa_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: executor
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [jo, equip]
+      responses:
+        '200':
+          description: Resum calculat satisfactòriament
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportSummary'
+
+  /api/v1/reports/logs:
+    get:
+      summary: Retorna la llista de línies de registre detallades desnormalitzades
+      parameters:
+        - name: data_inici
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: data_fi
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: client_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: objectiu_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: executor
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [jo, equip]
+      responses:
+        '200':
+          description: Llistat de registres diaris
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportLogRow'
+
+  /api/v1/reports/export:
+    get:
+      summary: Genera i descarrega l'arxiu Excel (.xlsx) amb les dades filtrades
+      parameters:
+        - name: data_inici
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: data_fi
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: client_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: objectiu_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: executor
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [jo, equip]
+      responses:
+        '200':
+          description: Fitxer Excel generat amb èxit
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+
+components:
+  schemas:
+    ReportSummary:
+      type: object
+      required:
+        - total_hores
+        - total_accions
+        - accions_tancades
+        - accions_en_curs
+        - hores_jo
+        - hores_equip
+        - dedicacio_clients
+        - dedicacio_objectius
+      properties:
+        total_hores:
+          type: number
+          format: float
+        total_accions:
+          type: integer
+        accions_tancades:
+          type: integer
+        accions_en_curs:
+          type: integer
+        hores_jo:
+          type: number
+          format: float
+        hores_equip:
+          type: number
+          format: float
+        dedicacio_clients:
+          type: array
+          items:
+            $ref: '#/components/schemas/DedicacioGroup'
+        dedicacio_objectius:
+          type: array
+          items:
+            $ref: '#/components/schemas/DedicacioGroup'
+
+    DedicacioGroup:
+      type: object
+      required:
+        - id
+        - nom
+        - hores
+        - percentatge
+      properties:
+        id:
+          type: string
+        nom:
+          type: string
+        hores:
+          type: number
+          format: float
+        percentatge:
+          type: number
+          format: float
+
+    ReportLogRow:
+      type: object
+      required:
+        - registre_id
+        - data
+        - accio_id
+        - accio_nom
+        - client_nom
+        - executor
+        - hores
+        - comentari
+      properties:
+        registre_id:
+          type: string
+          format: uuid
+        data:
+          type: string
+          format: date
+        accio_id:
+          type: string
+          format: uuid
+        accio_nom:
+          type: string
+        client_nom:
+          type: string
+        objectiu_nom:
+          type: string
+        iniciativa_nom:
+          type: string
+        equip_nom:
+          type: string
+        executor:
+          type: string
+          enum: [jo, equip]
+        hores:
+          type: number
+          format: float
+        comentari:
+          type: string

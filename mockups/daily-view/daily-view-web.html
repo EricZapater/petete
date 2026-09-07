@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petete — Vista Diària d'Engagement Manager (Web)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body {
+      background-color: #f4f6f8;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+    .navbar {
+      background-color: #1976d2;
+      color: #ffffff;
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .nav-brand {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .nav-links {
+      display: flex;
+      gap: 16px;
+    }
+    .nav-link {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+    .nav-link.active {
+      color: #ffffff;
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+    .container {
+      max-width: 1100px;
+      margin: 32px auto;
+      padding: 0 20px;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #212121;
+    }
+    .btn-primary {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      background-color: #1976d2;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(25, 118, 210, 0.3);
+    }
+    .btn-primary:hover {
+      background-color: #1565c0;
+    }
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 14px 20px;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      margin-bottom: 20px;
+    }
+    /* Action Card */
+    .action-card {
+      background: #ffffff;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .action-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .action-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .action-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #212121;
+      margin-bottom: 6px;
+    }
+    .meta-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-client { background-color: #e3f2fd; color: #0d47a1; }
+    .badge-initiative { background-color: #ede7f6; color: #4a148c; }
+    .badge-adhoc { background-color: #fff3e0; color: #e65100; }
+    .badge-executor { background-color: #f5f5f5; color: #333; border: 1px solid #ddd; }
+    .badge-status-progress { background-color: #e8f5e9; color: #1b5e20; }
+    .badge-tag { background-color: #f0f4f8; color: #555; border-radius: 4px; font-weight: 500; font-size: 11px; }
+
+    /* Quick Log Row */
+    .log-row {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .input-hours {
+      width: 90px;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+    .input-comment {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none;
+    }
+    .btn-log {
+      padding: 8px 16px;
+      background-color: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .btn-close-action {
+      padding: 8px 14px;
+      background-color: #fff;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .btn-close-action:hover {
+      background-color: #ffebee;
+    }
+
+    /* Comment History Thread */
+    .history-thread {
+      margin-top: 14px;
+      background-color: #fafbfc;
+      border: 1px solid #edf0f2;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 13px;
+    }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #e5e5e5;
+    }
+    .history-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    /* Modal Showcase */
+    .modal-showcase {
+      margin-top: 36px;
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1976d2;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 4px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 9px 12px;
+      font-size: 14px;
+      border: 1px solid #c4c4c4;
+      border-radius: 6px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="nav-brand">Petete</div>
+      <nav class="nav-links">
+        <a href="#" class="nav-link active">Vista Diària</a>
+        <a href="../masters/masters-web.html" class="nav-link">Mestres</a>
+        <a href="#" class="nav-link">Informes</a>
+      </nav>
+    </div>
+    <div style="font-size: 14px;">Eric Zapater (EM)</div>
+  </header>
+
+  <main class="container">
+    <div class="header-row">
+      <div>
+        <h1 class="page-title">Seguiment Diari d'Accions</h1>
+        <p style="font-size: 14px; color: #666; margin-top: 4px;">Registra hores i comentaris de les teves accions obertes d'avui (07/09/2026)</p>
+      </div>
+      <button class="btn-primary" onclick="alert('Obre modal Nova Acció')">+ Nova Acció</button>
+    </div>
+
+    <!-- Filter toolbar -->
+    <div class="filter-bar">
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <span style="font-size: 14px; font-weight: 600;">Filtrar per:</span>
+        <select style="padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px;">
+          <option>Tots els Clients</option>
+          <option>Inditex Logistics</option>
+          <option>Mango Global</option>
+        </select>
+        <select style="padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 13px;">
+          <option>Tots els Executors (Jo / Equip)</option>
+          <option>Jo</option>
+          <option>Equip</option>
+        </select>
+      </div>
+      <label style="font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+        <input type="checkbox"> Mostrar accions tancades
+      </label>
+    </div>
+
+    <!-- ACTION CARD 1: Amb Iniciativa -->
+    <div class="action-card">
+      <div class="action-header">
+        <div>
+          <div class="action-title">Definir esquema de dades de tracking multiusuari</div>
+          <div class="meta-badges">
+            <span class="badge badge-client">Inditex Logistics</span>
+            <span class="badge badge-initiative">Iniciativa: Arquitectura de Microserveis Go</span>
+            <span class="badge badge-executor">Executor: Jo</span>
+            <span class="badge badge-status-progress">En Curs</span>
+            <span class="badge badge-tag">#backend</span>
+            <span class="badge badge-tag">#database</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 13px; font-weight: 700; color: #1976d2;">Acumulat: 4.5 h</span>
+        </div>
+      </div>
+
+      <!-- Quick daily log form (Regles 2 i 3) -->
+      <div class="log-row">
+        <input type="number" step="0.25" placeholder="Hores (ex. 1.5)" class="input-hours" value="1.5">
+        <input type="text" placeholder="Comentari de la feina realitzada avui..." class="input-comment" value="Creats models de domini i migracions SQL pures amb aïllament user_id">
+        <button class="btn-log">Imputar</button>
+        <button class="btn-close-action">Tancar Acció</button>
+      </div>
+
+      <!-- Historical comment thread (Regla 2) -->
+      <div class="history-thread">
+        <div style="font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; margin-bottom: 6px;">Històric de Registres i Comentaris</div>
+        <div class="history-item">
+          <span><strong>06/09/2026:</strong> 3.0 h — Disseny del contracte OpenAPI i validació de casos d'ús amb l'equip tècnic.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION CARD 2: Ad-Hoc (Sense Iniciativa - Regla 1) -->
+    <div class="action-card">
+      <div class="action-header">
+        <div>
+          <div class="action-title">Reunió d'alineament estratègic d'urgència sobre dates de lliurament</div>
+          <div class="meta-badges">
+            <span class="badge badge-client">Mango Global</span>
+            <span class="badge badge-adhoc">⚡ Feina Ad-hoc (Sense Iniciativa)</span>
+            <span class="badge badge-executor">Executor: Jo</span>
+            <span class="badge badge-status-progress">En Curs</span>
+            <span class="badge badge-tag">#reunio</span>
+            <span class="badge badge-tag">#gestio</span>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 13px; font-weight: 700; color: #1976d2;">Acumulat: 1.0 h</span>
+        </div>
+      </div>
+
+      <div class="log-row">
+        <input type="number" step="0.25" placeholder="Hores" class="input-hours">
+        <input type="text" placeholder="Comentari d'avui..." class="input-comment">
+        <button class="btn-log">Imputar</button>
+        <button class="btn-close-action">Tancar Acció</button>
+      </div>
+    </div>
+
+    <!-- MODAL NOVA ACCIÓ (PLANIFICADA / AD-HOC) SHOWCASE -->
+    <div class="modal-showcase">
+      <div class="modal-title">Diàleg: Donar d'Alta Nova Acció (Happy Path)</div>
+      <form onsubmit="return false;">
+        <div class="form-group">
+          <label class="form-label" for="nom-accio">Nom de l'Acció *</label>
+          <input type="text" id="nom-accio" class="form-control" placeholder="ex. Preparació informe d'estat Q3" value="Auditoria d'accessibilitat WCAG de la vista diària">
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="client-select">Client *</label>
+            <select id="client-select" class="form-control">
+              <option selected>Inditex Logistics</option>
+              <option>Mango Global</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="iniciativa-select">Iniciativa (opcional — buit per a feina ad-hoc)</label>
+            <select id="iniciativa-select" class="form-control">
+              <option value="">-- Feina Ad-hoc (Sense Iniciativa) --</option>
+              <option selected>Arquitectura de Microserveis Go</option>
+              <option>Pipeline CI/CD Kubernetes</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label" for="executor-select">Executor *</label>
+            <select id="executor-select" class="form-control">
+              <option value="jo" selected>Jo (Engagement Manager)</option>
+              <option value="equip">Equip</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="etiquetes-input">Etiquetes (separades per comes)</label>
+            <input type="text" id="etiquetes-input" class="form-control" placeholder="a11y, frontend, ux" value="a11y, frontend">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+          <button style="padding: 10px 16px; border: 1px solid #ccc; background: #fff; border-radius: 6px; cursor: pointer;">Cancel·lar</button>
+          <button style="padding: 10px 20px; background: #1976d2; color: #fff; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Crear Acció</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+</body>
+</html>

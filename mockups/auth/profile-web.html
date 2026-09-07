@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petete — Perfil d'Usuari (Web)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    body {
+      background-color: #f4f6f8;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+    /* App Navbar */
+    .navbar {
+      background-color: #1976d2;
+      color: #ffffff;
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .nav-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e3f2fd;
+      color: #1976d2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .container {
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e0e0e0;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #212121;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 6px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 11px 14px;
+      font-size: 15px;
+      border: 1px solid #c4c4c4;
+      border-radius: 6px;
+      outline: none;
+      background-color: #fff;
+    }
+    .form-control:disabled {
+      background-color: #f5f5f5;
+      color: #777;
+      cursor: not-allowed;
+    }
+    .form-control:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+    }
+    .actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+    }
+    .btn-save {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      background-color: #1976d2;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-logout {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #d32f2f;
+      background-color: transparent;
+      border: 1px solid #d32f2f;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-logout:hover {
+      background-color: #ffebee;
+    }
+
+    /* Success toast preview */
+    .toast-success {
+      background-color: #edf7ed;
+      color: #1e4620;
+      border: 1px solid #c3e6cb;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-brand">
+      <span>Petete</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-size: 14px;">Eric Zapater</span>
+      <div class="nav-avatar">EZ</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Success Feedback Alert -->
+    <div class="toast-success">
+      <span>✓</span>
+      <span>El perfil i les preferències s'han actualitzat correctament.</span>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">Configuració del Perfil</h2>
+
+      <form onsubmit="return false;">
+        <div class="form-group">
+          <label class="form-label" for="email">Correu electrònic (no editable)</label>
+          <input type="email" id="email" class="form-control" value="eric.zapater@company.com" disabled>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="nom">Nom complet</label>
+          <input type="text" id="nom" class="form-control" value="Eric Zapater">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="idioma">Idioma de la interfície</label>
+          <select id="idioma" class="form-control">
+            <option value="ca" selected>Català</option>
+            <option value="es">Castellà (Español)</option>
+            <option value="en">Anglès (English)</option>
+          </select>
+        </div>
+
+        <div class="actions-row">
+          <button type="submit" class="btn-save">Desar Canvis</button>
+          <button type="button" class="btn-logout">Tancar Sessió</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+</body>
+</html>

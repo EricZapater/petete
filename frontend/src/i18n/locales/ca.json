@@ -1,0 +1,34 @@
+{
+  "app": {
+    "title": "Petete",
+    "subtitle": "Engagement Manager Tracking"
+  },
+  "auth": {
+    "loginTitle": "Petete",
+    "loginSubtitle": "Engagement Manager Daily Tracking",
+    "email": "Correu electrònic",
+    "password": "Contrasenya",
+    "nom": "Nom complet",
+    "idioma": "Idioma de la interfície",
+    "loginBtn": "Iniciar Sessió",
+    "registerBtn": "Completar Registre",
+    "noAccount": "No tens compte?",
+    "haveAccount": "Ja tens compte?",
+    "registerLink": "Registra't aquí",
+    "loginLink": "Inicia sessió",
+    "registerTitle": "Crear un Compte",
+    "registerSubtitle": "Comença a gestionar els teus clients i activitats",
+    "passwordHelper": "Mínim 8 caràcters",
+    "logout": "Tancar Sessió",
+    "profileTitle": "Configuració del Perfil",
+    "saveChanges": "Desar Canvis",
+    "profileSaved": "El perfil i les preferències s'han actualitzat correctament.",
+    "invalidCredentials": "Credencials incorrectes. Revisa el correu i la contrasenya.",
+    "emailExists": "Aquest correu electrònic ja està registrat."
+  },
+  "languages": {
+    "ca": "Català",
+    "es": "Castellà (Español)",
+    "en": "Anglès (English)"
+  }
+}

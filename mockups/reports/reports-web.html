@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petete — Vista Agregada & Informes (Mockup Web)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1976d2;
+      --primary-dark: #115293;
+      --primary-light: #e3f2fd;
+      --success: #2e7d32;
+      --success-light: #e8f5e9;
+      --warning: #ed6c02;
+      --warning-light: #fff3e0;
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
+    
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .brand { font-size: 20px; font-weight: 700; }
+    .nav-links { display: flex; gap: 8px; }
+    .nav-link {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .nav-link.active { color: white; background: rgba(255,255,255,0.15); font-weight: 700; }
+
+    .container { max-width: 1200px; margin: 32px auto; padding: 0 16px; }
+    
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .page-title { font-size: 24px; font-weight: 700; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background-color: var(--success);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(46,125,50,0.2);
+    }
+    .btn:hover { background-color: #1b5e20; }
+
+    /* Filters Card */
+    .filter-card {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      align-items: end;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 6px; }
+    .filter-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+    .filter-input, .filter-select {
+      height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0 12px;
+      font-size: 14px;
+      color: var(--text);
+      background: #fff;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-left: 4px solid var(--primary);
+    }
+    .kpi-card.success { border-left-color: var(--success); }
+    .kpi-card.warning { border-left-color: var(--warning); }
+    .kpi-card.purple { border-left-color: #9c27b0; }
+    .kpi-title { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .kpi-value { font-size: 28px; font-weight: 700; color: var(--text); }
+    .kpi-subtext { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* Breakdown Section */
+    .section-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .section-card {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+    .progress-item { margin-bottom: 12px; }
+    .progress-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+    .progress-bar-bg { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: var(--primary); border-radius: 4px; }
+
+    /* Detailed Table */
+    .table-card {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { padding: 12px 16px; background: #f8fafc; color: var(--text-muted); font-size: 12px; font-weight: 600; border-bottom: 2px solid var(--border); text-transform: uppercase; }
+    td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+    tr:hover { background-color: #f8fafc; }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-primary { background: var(--primary-light); color: var(--primary-dark); }
+    .badge-gray { background: #f1f5f9; color: #475569; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display: flex; align-items: center; gap: 32px;">
+      <div class="brand">Petete</div>
+      <div class="nav-links">
+        <a href="../daily-view/daily-view-web.html" class="nav-link">Vista Diària</a>
+        <a href="#" class="nav-link active">Informes</a>
+        <a href="../masters/masters-web.html" class="nav-link">Mestres</a>
+        <a href="../auth/profile-web.html" class="nav-link">Perfil</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Vista Agregada & Informes</h1>
+        <p style="color: var(--text-muted); font-size: 14px; margin-top: 4px;">Anàlisi de dedicació, KPIs de seguiment i exportació a full de càlcul</p>
+      </div>
+      <button class="btn" id="exportBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar a Excel (.xlsx)
+      </button>
+    </div>
+
+    <!-- Filtres Multidimensionals -->
+    <section class="filter-card">
+      <div class="filter-group">
+        <label class="filter-label">Des de</label>
+        <input type="date" class="filter-input" value="2026-09-01">
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Fins a</label>
+        <input type="date" class="filter-input" value="2026-09-07">
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Client</label>
+        <select class="filter-select">
+          <option value="">Tots els Clients</option>
+          <option value="1">Ajuntament de Barcelona</option>
+          <option value="2">Generalitat de Catalunya</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Objectiu</label>
+        <select class="filter-select">
+          <option value="">Tots els Objectius</option>
+          <option value="1">Modernització Portal Ciutadà</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Executor</label>
+        <select class="filter-select">
+          <option value="">Tots (Jo + Equip)</option>
+          <option value="jo">Jo (Engagement Manager)</option>
+          <option value="equip">Equip</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Indicadors KPI -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Hores Totals Imputades</div>
+        <div class="kpi-value">38.5 h</div>
+        <div class="kpi-subtext">En el període seleccionat</div>
+      </div>
+      <div class="kpi-card success">
+        <div class="kpi-title">Dedicació EM ("Jo")</div>
+        <div class="kpi-value">26.0 h <span style="font-size: 16px; font-weight: normal; color: var(--text-muted);">(67.5%)</span></div>
+        <div class="kpi-subtext">12.5 h delegades a equips</div>
+      </div>
+      <div class="kpi-card warning">
+        <div class="kpi-title">Accions Actives</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-subtext">4 amb tancament aquesta setmana</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-title">Accions Tancades</div>
+        <div class="kpi-value">14</div>
+        <div class="kpi-subtext">Taxa de tancament del 63.6%</div>
+      </div>
+    </section>
+
+    <!-- Desglossament per Client i Objectiu -->
+    <section class="section-grid">
+      <div class="section-card">
+        <h2 class="section-title">Dedicació per Client</h2>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span>Ajuntament de Barcelona</span>
+            <span>22.5 h (58.4%)</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 58.4%;"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span>Generalitat de Catalunya</span>
+            <span>16.0 h (41.6%)</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 41.6%; background: #0284c7;"></div></div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h2 class="section-title">Dedicació per Objectiu</h2>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span>Modernització Portal Ciutadà</span>
+            <span>18.0 h (46.7%)</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 46.7%; background: #2e7d32;"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span>Optimització de Processos Interns</span>
+            <span>12.5 h (32.5%)</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 32.5%; background: #ed6c02;"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span>Tasques transversals / Ad-hoc</span>
+            <span>8.0 h (20.8%)</span>
+          </div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 20.8%; background: #64748b;"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Taula Detallada -->
+    <section class="table-card">
+      <h2 class="section-title">Detall Cronològic d'Imputacions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Client</th>
+            <th>Objectiu / Iniciativa</th>
+            <th>Acció</th>
+            <th>Executor</th>
+            <th>Hores</th>
+            <th>Comentari</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>2026-09-07</strong></td>
+            <td>Ajuntament de BCN</td>
+            <td>Modernització Portal / Sprint 1</td>
+            <td>Revisió d'arquitectura Cloud</td>
+            <td><span class="badge badge-primary">Jo (EM)</span></td>
+            <td><strong>3.5 h</strong></td>
+            <td>Reunió amb l'equip tècnic i validació d'endpoints de l'API.</td>
+          </tr>
+          <tr>
+            <td><strong>2026-09-07</strong></td>
+            <td>Generalitat de Cat</td>
+            <td>Optimització Processos / Auditoria</td>
+            <td>Preparació de mètriques d'impacte</td>
+            <td><span class="badge badge-primary">Jo (EM)</span></td>
+            <td><strong>2.0 h</strong></td>
+            <td>Revisió de KPIs mensuals amb direcció.</td>
+          </tr>
+          <tr>
+            <td><strong>2026-09-06</strong></td>
+            <td>Ajuntament de BCN</td>
+            <td>Modernització Portal / Sprint 1</td>
+            <td>Testing e2e de flux de pagaments</td>
+            <td><span class="badge badge-gray">Equip Web</span></td>
+            <td><strong>4.0 h</strong></td>
+            <td>Execució de suites de test automatitzades amb èxit.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "app": {
+    "title": "Petete",
+    "subtitle": "Engagement Manager Tracking"
+  },
+  "auth": {
+    "loginTitle": "Petete",
+    "loginSubtitle": "Engagement Manager Daily Tracking",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "nom": "Nombre completo",
+    "idioma": "Idioma de la interfaz",
+    "loginBtn": "Iniciar Sesión",
+    "registerBtn": "Completar Registro",
+    "noAccount": "¿No tienes cuenta?",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "registerLink": "Regístrate aquí",
+    "loginLink": "Inicia sesión",
+    "registerTitle": "Crear una Cuenta",
+    "registerSubtitle": "Empieza a gestionar tus clientes y actividades",
+    "passwordHelper": "Mínimo 8 caracteres",
+    "logout": "Cerrar Sesión",
+    "profileTitle": "Configuración del Perfil",
+    "saveChanges": "Guardar Cambios",
+    "profileSaved": "El perfil y las preferencias se han actualizado correctamente.",
+    "invalidCredentials": "Credenciales incorrectas. Revisa el correo y la contraseña.",
+    "emailExists": "Este correo electrónico ya está registrado."
+  },
+  "languages": {
+    "ca": "Català",
+    "es": "Español",
+    "en": "English"
+  }
+}

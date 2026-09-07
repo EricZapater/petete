@@ -1,0 +1,348 @@
+openapi: 3.0.3
+info:
+  title: Petete API — Mòdul Auth
+  description: Contracte d'API per a l'autenticació, gestió de sessió i perfil d'usuari (Engagement Manager).
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Servidor de desenvolupament local
+
+paths:
+  /auth/register:
+    post:
+      summary: Registre d'un nou usuari
+      operationId: register
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Usuari registrat correctament i sessió iniciada
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=abc123jwt; HttpOnly; Secure; SameSite=Lax; Path=/api/v1/auth
+              description: Cookie HttpOnly amb el refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Dades d'entrada invàlides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Correu electrònic ja registrat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      summary: Inici de sessió d'un usuari
+      operationId: login
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Credencials correctes, sessió iniciada
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=abc123jwt; HttpOnly; Secure; SameSite=Lax; Path=/api/v1/auth
+              description: Cookie HttpOnly amb el refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Format de sol·licitud incorrecte
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credencials incorrectes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/refresh:
+    post:
+      summary: Renovació de l'Access Token mitjançant Refresh Token
+      operationId: refreshToken
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Token renovat amb èxit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Refresh token invàlid o expirat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/logout:
+    post:
+      summary: Tancament de sessió i revocació del refresh token
+      operationId: logout
+      tags:
+        - Auth
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Sessió tancada correctament
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refresh_token=; Max-Age=0; Path=/api/v1/auth
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '401':
+          description: No autoritzat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/me:
+    get:
+      summary: Obtenir dades del perfil de l'usuari autenticat
+      operationId: getProfile
+      tags:
+        - Profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Perfil de l'usuari
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Token invàlid o expirat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      summary: Actualitzar perfil o idioma preferit
+      operationId: updateProfile
+      tags:
+        - Profile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Perfil actualitzat correctament
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Dades invàlides
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autoritzat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Language:
+      type: string
+      enum:
+        - ca
+        - es
+        - en
+      default: ca
+      description: Idioma preferit de la interfície
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - nom
+        - idioma
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        email:
+          type: string
+          format: email
+          example: eric.zapater@company.com
+        nom:
+          type: string
+          example: Eric Zapater
+        idioma:
+          $ref: '#/components/schemas/Language'
+        created_at:
+          type: string
+          format: date-time
+          example: '2026-09-07T12:00:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2026-09-07T12:00:00Z'
+
+    RegisterRequest:
+      type: object
+      required:
+        - nom
+        - email
+        - password
+      properties:
+        nom:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: Eric Zapater
+        email:
+          type: string
+          format: email
+          example: eric.zapater@company.com
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+          example: PasswordSegur2026!
+        idioma:
+          $ref: '#/components/schemas/Language'
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: eric.zapater@company.com
+        password:
+          type: string
+          example: PasswordSegur2026!
+
+    AuthResponse:
+      type: object
+      required:
+        - user
+        - access_token
+        - token_type
+        - expires_in
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          description: Durada en segons de l'access token (ex. 900 per a 15 minuts)
+          example: 900
+
+    TokenResponse:
+      type: object
+      required:
+        - access_token
+        - token_type
+        - expires_in
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        token_type:
+          type: string
+          example: Bearer
+        expires_in:
+          type: integer
+          example: 900
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        nom:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: Eric Zapater
+        idioma:
+          $ref: '#/components/schemas/Language'
+
+    MessageResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: Operació realitzada amb èxit
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: INVALID_CREDENTIALS
+        message:
+          type: string
+          example: Credencials incorrectes
+        details:
+          type: array
+          items:
+            type: string
+          example: []

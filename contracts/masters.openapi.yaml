@@ -1,0 +1,773 @@
+openapi: 3.0.3
+info:
+  title: Petete API — Mòdul Mestres
+  description: Contracte d'API per a la gestió de Clients, Equips, Objectius, Iniciatives i Mètriques.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Servidor de desenvolupament local
+
+security:
+  - BearerAuth: []
+
+paths:
+  /clients:
+    get:
+      summary: Llistar clients de l'usuari
+      operationId: listClients
+      tags: [Clients]
+      parameters:
+        - name: actiu
+          in: query
+          required: false
+          schema:
+            type: boolean
+          description: Filtrar per estat actiu/inactiu
+      responses:
+        '200':
+          description: Llista de clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Crear un nou client
+      operationId: createClient
+      tags: [Clients]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClientRequest'
+      responses:
+        '201':
+          description: Client creat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /clients/{id}:
+    get:
+      summary: Obtenir dades d'un client
+      operationId: getClient
+      tags: [Clients]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Dades del client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Actualitzar un client
+      operationId: updateClient
+      tags: [Clients]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClientRequest'
+      responses:
+        '200':
+          description: Client actualitzat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Esborrar un client
+      operationId: deleteClient
+      tags: [Clients]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Client esborrat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /equips:
+    get:
+      summary: Llistar equips de l'usuari
+      operationId: listEquips
+      tags: [Equips]
+      parameters:
+        - name: client_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Llista d'equips
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Equip'
+    post:
+      summary: Crear un nou equip
+      operationId: createEquip
+      tags: [Equips]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEquipRequest'
+      responses:
+        '201':
+          description: Equip creat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Equip'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /equips/{id}:
+    patch:
+      summary: Actualitzar un equip
+      operationId: updateEquip
+      tags: [Equips]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEquipRequest'
+      responses:
+        '200':
+          description: Equip actualitzat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Equip'
+    delete:
+      summary: Esborrar un equip
+      operationId: deleteEquip
+      tags: [Equips]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+
+  /objectius:
+    get:
+      summary: Llistar objectius de l'usuari
+      operationId: listObjectius
+      tags: [Objectius]
+      parameters:
+        - name: client_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: estat
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ItemStatus'
+      responses:
+        '200':
+          description: Llista d'objectius
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Objectiu'
+    post:
+      summary: Crear un nou objectiu
+      operationId: createObjectiu
+      tags: [Objectius]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateObjectiuRequest'
+      responses:
+        '201':
+          description: Objectiu creat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Objectiu'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /objectius/{id}:
+    patch:
+      summary: Actualitzar un objectiu
+      operationId: updateObjectiu
+      tags: [Objectius]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateObjectiuRequest'
+      responses:
+        '200':
+          description: Objectiu actualitzat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Objectiu'
+    delete:
+      summary: Esborrar un objectiu
+      operationId: deleteObjectiu
+      tags: [Objectius]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+
+  /iniciatives:
+    get:
+      summary: Llistar iniciatives de l'usuari
+      operationId: listIniciatives
+      tags: [Iniciatives]
+      parameters:
+        - name: objectiu_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: estat
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ItemStatus'
+      responses:
+        '200':
+          description: Llista d'iniciatives
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Iniciativa'
+    post:
+      summary: Crear una nova iniciativa
+      operationId: createIniciativa
+      tags: [Iniciatives]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateIniciativaRequest'
+      responses:
+        '201':
+          description: Iniciativa creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Iniciativa'
+
+  /iniciatives/{id}:
+    patch:
+      summary: Actualitzar una iniciativa
+      operationId: updateIniciativa
+      tags: [Iniciatives]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateIniciativaRequest'
+      responses:
+        '200':
+          $ref: '#/components/schemas/Iniciativa'
+    delete:
+      summary: Esborrar una iniciativa
+      operationId: deleteIniciativa
+      tags: [Iniciatives]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+
+  /metriques:
+    get:
+      summary: Llistar mètriques de l'usuari
+      operationId: listMetriques
+      tags: [Mètriques]
+      parameters:
+        - name: iniciativa_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Llista de mètriques
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Metrica'
+    post:
+      summary: Crear una nova mètrica
+      operationId: createMetrica
+      tags: [Mètriques]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMetricaRequest'
+      responses:
+        '201':
+          description: Mètrica creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrica'
+
+  /metriques/{id}:
+    patch:
+      summary: Actualitzar una mètrica
+      operationId: updateMetrica
+      tags: [Mètriques]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMetricaRequest'
+      responses:
+        '200':
+          description: Mètrica actualitzada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Metrica'
+    delete:
+      summary: Esborrar una mètrica
+      operationId: deleteMetrica
+      tags: [Mètriques]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    Unauthorized:
+      description: No autoritzat
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Recurs no trobat
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Dades invàlides
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Message:
+      description: Operació realitzada
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/MessageResponse'
+
+  schemas:
+    ItemStatus:
+      type: string
+      enum: [pendent, en_curs, bloquejat, tancat]
+      default: pendent
+
+    Client:
+      type: object
+      required: [id, user_id, nom, actiu, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        actiu:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateClientRequest:
+      type: object
+      required: [nom]
+      properties:
+        nom:
+          type: string
+          minLength: 1
+          maxLength: 150
+        actiu:
+          type: boolean
+          default: true
+
+    UpdateClientRequest:
+      type: object
+      properties:
+        nom:
+          type: string
+          minLength: 1
+        actiu:
+          type: boolean
+
+    Equip:
+      type: object
+      required: [id, user_id, client_id, nom, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        client_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateEquipRequest:
+      type: object
+      required: [client_id, nom]
+      properties:
+        client_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+          minLength: 1
+
+    UpdateEquipRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+
+    Objectiu:
+      type: object
+      required: [id, user_id, client_id, nom, estat, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        client_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        descripcio:
+          type: string
+          nullable: true
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateObjectiuRequest:
+      type: object
+      required: [client_id, nom]
+      properties:
+        client_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+          minLength: 1
+        descripcio:
+          type: string
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+
+    UpdateObjectiuRequest:
+      type: object
+      properties:
+        client_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        descripcio:
+          type: string
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+
+    Iniciativa:
+      type: object
+      required: [id, user_id, objectiu_id, nom, estat, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        objectiu_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateIniciativaRequest:
+      type: object
+      required: [objectiu_id, nom]
+      properties:
+        objectiu_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+          minLength: 1
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+
+    UpdateIniciativaRequest:
+      type: object
+      properties:
+        objectiu_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        estat:
+          $ref: '#/components/schemas/ItemStatus'
+        data_prevista_tancament:
+          type: string
+          format: date
+
+    Metrica:
+      type: object
+      required: [id, user_id, iniciativa_id, nom, unitat, valor_objectiu, valor_actual, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        iniciativa_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        unitat:
+          type: string
+        valor_objectiu:
+          type: number
+        valor_actual:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateMetricaRequest:
+      type: object
+      required: [iniciativa_id, nom, unitat, valor_objectiu, valor_actual]
+      properties:
+        iniciativa_id:
+          type: string
+          format: uuid
+        nom:
+          type: string
+        unitat:
+          type: string
+        valor_objectiu:
+          type: number
+        valor_actual:
+          type: number
+
+    UpdateMetricaRequest:
+      type: object
+      properties:
+        nom:
+          type: string
+        unitat:
+          type: string
+        valor_objectiu:
+          type: number
+        valor_actual:
+          type: number
+
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
