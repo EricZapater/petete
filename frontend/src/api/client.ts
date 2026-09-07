@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+export const API_BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api/v1`
+  : (import.meta.env.PROD ? 'https://api.petete.ericzapater.cat/api/v1' : '/api/v1');
+
 export const apiClient = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -69,7 +73,7 @@ apiClient.interceptors.response.use(
 
       try {
         const { data } = await axios.post(
-          '/api/v1/auth/refresh',
+          `${API_BASE_URL}/auth/refresh`,
           {},
           { withCredentials: true }
         );

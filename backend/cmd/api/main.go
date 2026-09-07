@@ -70,8 +70,13 @@ func main() {
 	r := gin.Default()
 
 	// CORS Configuration
+	allowedOrigins := []string{"http://localhost:5173", "http://localhost:3000", "https://petete.ericzapater.cat"}
+	if extraOrigin := os.Getenv("CORS_ORIGIN"); extraOrigin != "" {
+		allowedOrigins = append(allowedOrigins, extraOrigin)
+	}
+
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:3000", "https://petete.ericzapater.cat"},
+		AllowOrigins:     allowedOrigins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
