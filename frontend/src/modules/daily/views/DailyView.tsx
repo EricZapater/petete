@@ -55,7 +55,7 @@ export const DailyView: React.FC = () => {
     clearError,
   } = useDailyStore();
 
-  const { clients, iniciatives, equips, fetchAll: fetchMasters } = useMastersStore();
+  const { clients, objectius, iniciatives, equips, fetchAll: fetchMasters } = useMastersStore();
 
   const [openNewAccioDialog, setOpenNewAccioDialog] = useState(false);
   const [accioNom, setAccioNom] = useState('');
@@ -425,7 +425,11 @@ export const DailyView: React.FC = () => {
               <Select
                 value={accioClientId}
                 label={`${t('common.client', 'Client')} *`}
-                onChange={(e) => setAccioClientId(e.target.value)}
+                onChange={(e) => {
+                  setAccioClientId(e.target.value);
+                  setAccioIniciativaId('');
+                  setAccioEquipId('');
+                }}
               >
                 {clients.map((c) => (
                   <MenuItem key={c.id} value={c.id}>
@@ -443,11 +447,21 @@ export const DailyView: React.FC = () => {
                 onChange={(e) => setAccioIniciativaId(e.target.value)}
               >
                 <MenuItem value="">{t('daily.noInitiativeAdHoc', '-- Feina Ad-hoc (Sense Iniciativa) --')}</MenuItem>
-                {iniciatives.map((i) => (
-                  <MenuItem key={i.id} value={i.id}>
-                    {i.nom}
-                  </MenuItem>
-                ))}
+                {iniciatives
+                  .filter((i) => {
+                    if (!accioClientId) return true;
+                    if (i.client_id) return i.client_id === accioClientId;
+                    if (i.objectiu_id) {
+                      const obj = objectius.find((o) => o.id === i.objectiu_id);
+                      return obj?.client_id === accioClientId;
+                    }
+                    return true;
+                  })
+                  .map((i) => (
+                    <MenuItem key={i.id} value={i.id}>
+                      {i.nom}
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </Box>

@@ -10,7 +10,8 @@ import (
 type Iniciativa struct {
 	ID                    uuid.UUID           `json:"id"`
 	UserID                uuid.UUID           `json:"user_id"`
-	ObjectiuID            uuid.UUID           `json:"objectiu_id"`
+	ClientID              *uuid.UUID          `json:"client_id,omitempty"`
+	ObjectiuID            *uuid.UUID          `json:"objectiu_id,omitempty"`
 	Nom                   string              `json:"nom"`
 	Estat                 objectiu.ItemStatus `json:"estat"`
 	DataPrevistaTancament *string             `json:"data_prevista_tancament,omitempty"`
@@ -19,13 +20,15 @@ type Iniciativa struct {
 }
 
 type CreateIniciativaRequest struct {
-	ObjectiuID            uuid.UUID            `json:"objectiu_id" binding:"required"`
+	ClientID              *uuid.UUID           `json:"client_id,omitempty"`
+	ObjectiuID            *uuid.UUID           `json:"objectiu_id,omitempty"`
 	Nom                   string               `json:"nom" binding:"required,min=1,max=200"`
 	Estat                 *objectiu.ItemStatus `json:"estat,omitempty"`
 	DataPrevistaTancament *string              `json:"data_prevista_tancament,omitempty"`
 }
 
 type UpdateIniciativaRequest struct {
+	ClientID              *uuid.UUID           `json:"client_id,omitempty"`
 	ObjectiuID            *uuid.UUID           `json:"objectiu_id,omitempty"`
 	Nom                   *string              `json:"nom,omitempty" binding:"omitempty,min=1,max=200"`
 	Estat                 *objectiu.ItemStatus `json:"estat,omitempty" binding:"omitempty,oneof=pendent en_curs bloquejat tancat"`

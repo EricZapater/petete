@@ -76,8 +76,9 @@ export const mastersApi = {
   },
 
   // Iniciatives
-  listIniciatives: async (objectiuId?: string, estat?: ItemStatus): Promise<Iniciativa[]> => {
+  listIniciatives: async (clientId?: string, objectiuId?: string, estat?: ItemStatus): Promise<Iniciativa[]> => {
     const params: any = {};
+    if (clientId) params.client_id = clientId;
     if (objectiuId) params.objectiu_id = objectiuId;
     if (estat) params.estat = estat;
     const res = await apiClient.get<Iniciativa[]>('/iniciatives', { params });

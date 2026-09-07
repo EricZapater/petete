@@ -211,9 +211,9 @@ export const useMastersStore = create<MastersState>((set, get) => ({
     }
   },
 
-  fetchIniciatives: async (objectiuId?: string) => {
+  fetchIniciatives: async (clientId?: string, objectiuId?: string) => {
     try {
-      const data = await mastersApi.listIniciatives(objectiuId);
+      const data = await mastersApi.listIniciatives(clientId, objectiuId);
       set({ iniciatives: data });
     } catch (err: any) {
       set({ error: err.response?.data?.message || 'Error carregant iniciatives' });

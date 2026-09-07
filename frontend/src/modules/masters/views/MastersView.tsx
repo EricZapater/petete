@@ -94,6 +94,7 @@ export const MastersView: React.FC = () => {
   const [openIniciativaDialog, setOpenIniciativaDialog] = useState(false);
   const [editingIniciativa, setEditingIniciativa] = useState<Iniciativa | null>(null);
   const [iniciativaNom, setIniciativaNom] = useState('');
+  const [iniciativaClientId, setIniciativaClientId] = useState('');
   const [iniciativaObjectiuId, setIniciativaObjectiuId] = useState('');
   const [iniciativaEstat, setIniciativaEstat] = useState<ItemStatus>('pendent');
   const [iniciativaData, setIniciativaData] = useState('');
@@ -197,7 +198,8 @@ export const MastersView: React.FC = () => {
   // Iniciativa Handlers
   const handleSaveIniciativa = async () => {
     const data = {
-      objectiu_id: iniciativaObjectiuId,
+      client_id: iniciativaClientId,
+      objectiu_id: iniciativaObjectiuId || null,
       nom: iniciativaNom,
       estat: iniciativaEstat,
       data_prevista_tancament: iniciativaData || undefined,
@@ -215,7 +217,10 @@ export const MastersView: React.FC = () => {
   const handleOpenEditIniciativa = (i: Iniciativa) => {
     setEditingIniciativa(i);
     setIniciativaNom(i.nom);
-    setIniciativaObjectiuId(i.objectiu_id);
+    const resolvedClientId =
+      i.client_id || (i.objectiu_id ? objectius.find((o) => o.id === i.objectiu_id)?.client_id || '' : clients[0]?.id || '');
+    setIniciativaClientId(resolvedClientId);
+    setIniciativaObjectiuId(i.objectiu_id || '');
     setIniciativaEstat(i.estat);
     setIniciativaData(i.data_prevista_tancament || '');
     setOpenIniciativaDialog(true);
@@ -267,6 +272,15 @@ export const MastersView: React.FC = () => {
 
   const getClientName = (clientId: string) => {
     return clients.find((c) => c.id === clientId)?.nom || '—';
+  };
+
+  const getClientFromIniciativa = (i: Iniciativa) => {
+    if (i.client_id) return getClientName(i.client_id);
+    if (i.objectiu_id) {
+      const obj = objectius.find((o) => o.id === i.objectiu_id);
+      if (obj) return getClientName(obj.client_id);
+    }
+    return '—';
   };
 
   const getObjectiuName = (objectiuId: string) => {
@@ -335,7 +349,8 @@ export const MastersView: React.FC = () => {
               onClick={() => {
                 setEditingIniciativa(null);
                 setIniciativaNom('');
-                setIniciativaObjectiuId(objectius[0]?.id || '');
+                setIniciativaClientId(clients[0]?.id || '');
+                setIniciativaObjectiuId('');
                 setIniciativaEstat('pendent');
                 setIniciativaData('');
                 setOpenIniciativaDialog(true);
@@ -520,6 +535,7 @@ export const MastersView: React.FC = () => {
                   <TableHead sx={{ bgcolor: '#fafafa' }}>
                     <TableRow>
                       <TableCell sx={{ fontWeight: 700 }}>{t('common.initiative', 'Iniciativa')}</TableCell>
+                      <TableCell sx={{ fontWeight: 700 }}>{t('masters.assignedClient', 'Client Assignat')}</TableCell>
                       <TableCell sx={{ fontWeight: 700 }}>{t('masters.linkedObjective', 'Objectiu Vinculat')}</TableCell>
                       <TableCell sx={{ fontWeight: 700 }}>{t('common.status', 'Estat')}</TableCell>
                       <TableCell sx={{ fontWeight: 700 }}>{t('masters.expectedDate', 'Data Prevista')}</TableCell>
@@ -529,7 +545,7 @@ export const MastersView: React.FC = () => {
                   <TableBody>
                     {iniciatives.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} align="center" sx={{ py: 4, color: 'text.secondary' }}>
+                        <TableCell colSpan={6} align="center" sx={{ py: 4, color: 'text.secondary' }}>
                           {t('masters.emptyInitiatives', 'Cap iniciativa creada. Fes clic a "+ Nova Iniciativa".')}
                         </TableCell>
                       </TableRow>
@@ -537,7 +553,14 @@ export const MastersView: React.FC = () => {
                       iniciatives.map((i) => (
                         <TableRow key={i.id} hover>
                           <TableCell sx={{ fontWeight: 600 }}>{i.nom}</TableCell>
-                          <TableCell>{getObjectiuName(i.objectiu_id)}</TableCell>
+                          <TableCell>{getClientFromIniciativa(i)}</TableCell>
+                          <TableCell>
+                            {i.objectiu_id ? (
+                              getObjectiuName(i.objectiu_id)
+                            ) : (
+                              <Chip label={t('masters.noObjective', 'Sense Objectiu')} size="small" variant="outlined" />
+                            )}
+                          </TableCell>
                           <TableCell>{getStatusChip(i.estat)}</TableCell>
                           <TableCell>{i.data_prevista_tancament || '—'}</TableCell>
                           <TableCell align="right">
@@ -774,19 +797,43 @@ export const MastersView: React.FC = () => {
         <DialogTitle>{editingIniciativa ? t('masters.inicDialogTitleEdit', 'Editar Iniciativa') : t('masters.inicDialogTitleNew', 'Nova Iniciativa')}</DialogTitle>
         <DialogContent>
           <FormControl fullWidth margin="dense" sx={{ mt: 1, mb: 2 }}>
-            <InputLabel>{t('masters.linkedObjective', 'Objectiu Vinculat')}</InputLabel>
+            <InputLabel>{t('common.client', 'Client')}</InputLabel>
             <Select
-              value={iniciativaObjectiuId}
-              label={t('masters.linkedObjective', 'Objectiu Vinculat')}
-              onChange={(e) => setIniciativaObjectiuId(e.target.value)}
+              value={iniciativaClientId}
+              label={t('common.client', 'Client')}
+              onChange={(e) => {
+                setIniciativaClientId(e.target.value);
+                setIniciativaObjectiuId('');
+              }}
             >
-              {objectius.map((o) => (
-                <MenuItem key={o.id} value={o.id}>
-                  {o.nom} ({getClientName(o.client_id)})
+              {clients.map((c) => (
+                <MenuItem key={c.id} value={c.id}>
+                  {c.nom}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
+
+          <FormControl fullWidth margin="dense" sx={{ mb: 2 }}>
+            <InputLabel>{t('masters.linkedObjectiveOptional', 'Objectiu Vinculat (Opcional)')}</InputLabel>
+            <Select
+              value={iniciativaObjectiuId}
+              label={t('masters.linkedObjectiveOptional', 'Objectiu Vinculat (Opcional)')}
+              onChange={(e) => setIniciativaObjectiuId(e.target.value)}
+            >
+              <MenuItem value="">
+                <em>{t('masters.noObjectiveDirect', 'Cap (Directe al Client / Sense Objectiu)')}</em>
+              </MenuItem>
+              {objectius
+                .filter((o) => !iniciativaClientId || o.client_id === iniciativaClientId)
+                .map((o) => (
+                  <MenuItem key={o.id} value={o.id}>
+                    {o.nom}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+
           <TextField
             margin="dense"
             label={t('masters.initiativeName', 'Nom de la Iniciativa')}
@@ -820,7 +867,7 @@ export const MastersView: React.FC = () => {
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setOpenIniciativaDialog(false)}>{t('common.cancel', 'Cancel·lar')}</Button>
-          <Button variant="contained" onClick={handleSaveIniciativa} disabled={!iniciativaNom || !iniciativaObjectiuId}>
+          <Button variant="contained" onClick={handleSaveIniciativa} disabled={!iniciativaNom || !iniciativaClientId}>
             {t('common.save', 'Desar')}
           </Button>
         </DialogActions>

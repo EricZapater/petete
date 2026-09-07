@@ -69,7 +69,8 @@ export interface UpdateObjectiuRequest {
 export interface Iniciativa {
   id: string;
   user_id: string;
-  objectiu_id: string;
+  client_id?: string;
+  objectiu_id?: string | null;
   nom: string;
   estat: ItemStatus;
   data_prevista_tancament?: string;
@@ -78,14 +79,16 @@ export interface Iniciativa {
 }
 
 export interface CreateIniciativaRequest {
-  objectiu_id: string;
+  client_id?: string;
+  objectiu_id?: string | null;
   nom: string;
   estat?: ItemStatus;
   data_prevista_tancament?: string;
 }
 
 export interface UpdateIniciativaRequest {
-  objectiu_id?: string;
+  client_id?: string;
+  objectiu_id?: string | null;
   nom?: string;
   estat?: ItemStatus;
   data_prevista_tancament?: string;

@@ -19,15 +19,20 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{db: db}
 }
 
-func (r *Repository) List(ctx context.Context, userID uuid.UUID, objectiuID *uuid.UUID, estat *objectiu.ItemStatus) ([]Iniciativa, error) {
+func (r *Repository) List(ctx context.Context, userID uuid.UUID, clientID, objectiuID *uuid.UUID, estat *objectiu.ItemStatus) ([]Iniciativa, error) {
 	query := `
-		SELECT id, user_id, objectiu_id, nom, estat, TO_CHAR(data_prevista_tancament, 'YYYY-MM-DD'), created_at, updated_at
+		SELECT id, user_id, client_id, objectiu_id, nom, estat, TO_CHAR(data_prevista_tancament, 'YYYY-MM-DD'), created_at, updated_at
 		FROM iniciatives
 		WHERE user_id = $1
 	`
 	args := []interface{}{userID}
 	paramIdx := 2
 
+	if clientID != nil {
+		query += ` AND client_id = $` + string(rune('0'+paramIdx))
+		args = append(args, *clientID)
+		paramIdx++
+	}
 	if objectiuID != nil {
 		query += ` AND objectiu_id = $` + string(rune('0'+paramIdx))
 		args = append(args, *objectiuID)
@@ -50,9 +55,20 @@ func (r *Repository) List(ctx context.Context, userID uuid.UUID, objectiuID *uui
 	iniciatives := make([]Iniciativa, 0)
 	for rows.Next() {
 		var i Iniciativa
+		var cid, oid sql.NullString
 		var dt sql.NullString
-		if err := rows.Scan(&i.ID, &i.UserID, &i.ObjectiuID, &i.Nom, &i.Estat, &dt, &i.CreatedAt, &i.UpdatedAt); err != nil {
+		if err := rows.Scan(&i.ID, &i.UserID, &cid, &oid, &i.Nom, &i.Estat, &dt, &i.CreatedAt, &i.UpdatedAt); err != nil {
 			return nil, err
+		}
+		if cid.Valid {
+			if parsedCID, err := uuid.Parse(cid.String); err == nil {
+				i.ClientID = &parsedCID
+			}
+		}
+		if oid.Valid {
+			if parsedOID, err := uuid.Parse(oid.String); err == nil {
+				i.ObjectiuID = &parsedOID
+			}
 		}
 		if dt.Valid {
 			i.DataPrevistaTancament = &dt.String
@@ -64,20 +80,31 @@ func (r *Repository) List(ctx context.Context, userID uuid.UUID, objectiuID *uui
 
 func (r *Repository) GetByID(ctx context.Context, userID, id uuid.UUID) (*Iniciativa, error) {
 	query := `
-		SELECT id, user_id, objectiu_id, nom, estat, TO_CHAR(data_prevista_tancament, 'YYYY-MM-DD'), created_at, updated_at
+		SELECT id, user_id, client_id, objectiu_id, nom, estat, TO_CHAR(data_prevista_tancament, 'YYYY-MM-DD'), created_at, updated_at
 		FROM iniciatives
 		WHERE user_id = $1 AND id = $2
 	`
 	i := &Iniciativa{}
+	var cid, oid sql.NullString
 	var dt sql.NullString
 	err := r.db.QueryRowContext(ctx, query, userID, id).Scan(
-		&i.ID, &i.UserID, &i.ObjectiuID, &i.Nom, &i.Estat, &dt, &i.CreatedAt, &i.UpdatedAt,
+		&i.ID, &i.UserID, &cid, &oid, &i.Nom, &i.Estat, &dt, &i.CreatedAt, &i.UpdatedAt,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, shared.ErrUserNotFound
 		}
 		return nil, err
+	}
+	if cid.Valid {
+		if parsedCID, err := uuid.Parse(cid.String); err == nil {
+			i.ClientID = &parsedCID
+		}
+	}
+	if oid.Valid {
+		if parsedOID, err := uuid.Parse(oid.String); err == nil {
+			i.ObjectiuID = &parsedOID
+		}
 	}
 	if dt.Valid {
 		i.DataPrevistaTancament = &dt.String
@@ -87,8 +114,8 @@ func (r *Repository) GetByID(ctx context.Context, userID, id uuid.UUID) (*Inicia
 
 func (r *Repository) Create(ctx context.Context, i *Iniciativa) error {
 	query := `
-		INSERT INTO iniciatives (id, user_id, objectiu_id, nom, estat, data_prevista_tancament, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, NULLIF($6, '')::date, $7, $8)
+		INSERT INTO iniciatives (id, user_id, client_id, objectiu_id, nom, estat, data_prevista_tancament, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, NULLIF($7, '')::date, $8, $9)
 		RETURNING id, created_at, updated_at
 	`
 	now := time.Now().UTC()
@@ -102,15 +129,15 @@ func (r *Repository) Create(ctx context.Context, i *Iniciativa) error {
 	}
 
 	return r.db.QueryRowContext(
-		ctx, query, i.ID, i.UserID, i.ObjectiuID, i.Nom, i.Estat, dtStr, i.CreatedAt, i.UpdatedAt,
+		ctx, query, i.ID, i.UserID, i.ClientID, i.ObjectiuID, i.Nom, i.Estat, dtStr, i.CreatedAt, i.UpdatedAt,
 	).Scan(&i.ID, &i.CreatedAt, &i.UpdatedAt)
 }
 
 func (r *Repository) Update(ctx context.Context, i *Iniciativa) error {
 	query := `
 		UPDATE iniciatives
-		SET objectiu_id = $1, nom = $2, estat = $3, data_prevista_tancament = NULLIF($4, '')::date, updated_at = $5
-		WHERE user_id = $6 AND id = $7
+		SET client_id = $1, objectiu_id = $2, nom = $3, estat = $4, data_prevista_tancament = NULLIF($5, '')::date, updated_at = $6
+		WHERE user_id = $7 AND id = $8
 	`
 	i.UpdatedAt = time.Now().UTC()
 	var dtStr string
@@ -118,7 +145,7 @@ func (r *Repository) Update(ctx context.Context, i *Iniciativa) error {
 		dtStr = *i.DataPrevistaTancament
 	}
 
-	result, err := r.db.ExecContext(ctx, query, i.ObjectiuID, i.Nom, i.Estat, dtStr, i.UpdatedAt, i.UserID, i.ID)
+	result, err := r.db.ExecContext(ctx, query, i.ClientID, i.ObjectiuID, i.Nom, i.Estat, dtStr, i.UpdatedAt, i.UserID, i.ID)
 	if err != nil {
 		return err
 	}

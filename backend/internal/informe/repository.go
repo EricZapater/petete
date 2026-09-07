@@ -92,7 +92,7 @@ func (r *repository) GetSummary(ctx context.Context, filter ReportFilter) (*Repo
 		JOIN accions a ON r.accio_id = a.id AND a.user_id = r.user_id
 		LEFT JOIN iniciatives i ON a.iniciativa_id = i.id AND i.user_id = r.user_id
 		LEFT JOIN objectius o ON i.objectiu_id = o.id AND o.user_id = r.user_id
-		LEFT JOIN clients c ON (a.client_id = c.id OR o.client_id = c.id) AND c.user_id = r.user_id
+		LEFT JOIN clients c ON (a.client_id = c.id OR o.client_id = c.id OR i.client_id = c.id) AND c.user_id = r.user_id
 		WHERE r.user_id = $1 %s
 	`, filterSQL)
 
@@ -118,7 +118,7 @@ func (r *repository) GetSummary(ctx context.Context, filter ReportFilter) (*Repo
 		JOIN accions a ON r.accio_id = a.id AND a.user_id = r.user_id
 		LEFT JOIN iniciatives i ON a.iniciativa_id = i.id AND i.user_id = r.user_id
 		LEFT JOIN objectius o ON i.objectiu_id = o.id AND o.user_id = r.user_id
-		LEFT JOIN clients c ON (a.client_id = c.id OR o.client_id = c.id) AND c.user_id = r.user_id
+		LEFT JOIN clients c ON (a.client_id = c.id OR o.client_id = c.id OR i.client_id = c.id) AND c.user_id = r.user_id
 		WHERE r.user_id = $1 %s
 		GROUP BY c.id, c.nom
 		ORDER BY hores DESC
@@ -151,7 +151,7 @@ func (r *repository) GetSummary(ctx context.Context, filter ReportFilter) (*Repo
 		JOIN accions a ON r.accio_id = a.id AND a.user_id = r.user_id
 		LEFT JOIN iniciatives i ON a.iniciativa_id = i.id AND i.user_id = r.user_id
 		LEFT JOIN objectius o ON i.objectiu_id = o.id AND o.user_id = r.user_id
-		LEFT JOIN clients c ON (a.client_id = c.id OR o.client_id = c.id) AND c.user_id = r.user_id
+		LEFT JOIN clients c ON (a.client_id = c.id OR o.client_id = c.id OR i.client_id = c.id) AND c.user_id = r.user_id
 		WHERE r.user_id = $1 %s
 		GROUP BY o.id, o.nom
 		ORDER BY hores DESC
@@ -198,7 +198,7 @@ func (r *repository) GetLogs(ctx context.Context, filter ReportFilter) ([]Report
 		JOIN accions a ON r.accio_id = a.id AND a.user_id = r.user_id
 		LEFT JOIN iniciatives i ON a.iniciativa_id = i.id AND i.user_id = r.user_id
 		LEFT JOIN objectius o ON i.objectiu_id = o.id AND o.user_id = r.user_id
-		LEFT JOIN clients c ON (a.client_id = c.id OR o.client_id = c.id) AND c.user_id = r.user_id
+		LEFT JOIN clients c ON (a.client_id = c.id OR o.client_id = c.id OR i.client_id = c.id) AND c.user_id = r.user_id
 		LEFT JOIN equips e ON a.equip_id = e.id AND e.user_id = r.user_id
 		WHERE r.user_id = $1 %s
 		ORDER BY r.data DESC, r.created_at DESC

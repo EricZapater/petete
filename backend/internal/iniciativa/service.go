@@ -16,8 +16,8 @@ func NewService(repo *Repository) *Service {
 	return &Service{repo: repo}
 }
 
-func (s *Service) List(ctx context.Context, userID uuid.UUID, objectiuID *uuid.UUID, estat *objectiu.ItemStatus) ([]Iniciativa, error) {
-	return s.repo.List(ctx, userID, objectiuID, estat)
+func (s *Service) List(ctx context.Context, userID uuid.UUID, clientID, objectiuID *uuid.UUID, estat *objectiu.ItemStatus) ([]Iniciativa, error) {
+	return s.repo.List(ctx, userID, clientID, objectiuID, estat)
 }
 
 func (s *Service) GetByID(ctx context.Context, userID, id uuid.UUID) (*Iniciativa, error) {
@@ -32,6 +32,7 @@ func (s *Service) Create(ctx context.Context, userID uuid.UUID, req CreateInicia
 
 	i := &Iniciativa{
 		UserID:                userID,
+		ClientID:              req.ClientID,
 		ObjectiuID:            req.ObjectiuID,
 		Nom:                   strings.TrimSpace(req.Nom),
 		Estat:                 estat,
@@ -50,8 +51,12 @@ func (s *Service) Update(ctx context.Context, userID, id uuid.UUID, req UpdateIn
 		return nil, err
 	}
 
+	if req.ClientID != nil {
+		i.ClientID = req.ClientID
+	}
+	// Note: allow setting ObjectiuID to a new value or to nil
 	if req.ObjectiuID != nil {
-		i.ObjectiuID = *req.ObjectiuID
+		i.ObjectiuID = req.ObjectiuID
 	}
 	if req.Nom != nil {
 		i.Nom = strings.TrimSpace(*req.Nom)

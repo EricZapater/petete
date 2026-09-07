@@ -34,6 +34,13 @@ func (h *Handler) List(c *gin.Context) {
 		return
 	}
 
+	var clientID *uuid.UUID
+	if cidStr := c.Query("client_id"); cidStr != "" {
+		if id, err := uuid.Parse(cidStr); err == nil {
+			clientID = &id
+		}
+	}
+
 	var objectiuID *uuid.UUID
 	if oidStr := c.Query("objectiu_id"); oidStr != "" {
 		if id, err := uuid.Parse(oidStr); err == nil {
@@ -47,7 +54,7 @@ func (h *Handler) List(c *gin.Context) {
 		estat = &st
 	}
 
-	iniciatives, err := h.service.List(c.Request.Context(), userID, objectiuID, estat)
+	iniciatives, err := h.service.List(c.Request.Context(), userID, clientID, objectiuID, estat)
 	if err != nil {
 		shared.RespondWithError(c, err)
 		return
