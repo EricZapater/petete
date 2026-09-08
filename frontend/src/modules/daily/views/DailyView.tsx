@@ -30,10 +30,11 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ReplayIcon from '@mui/icons-material/Replay';
 import HistoryIcon from '@mui/icons-material/History';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Navbar } from '../../../components/Navbar';
 import { useTranslation } from 'react-i18next';
 import { useDailyStore } from '../store';
-import { ExecutorType } from '../types';
+import { AccioWithStats, ExecutorType } from '../types';
 import { useMastersStore } from '../../masters/store';
 import { ItemStatus } from '../../masters/types';
 
@@ -58,6 +59,7 @@ export const DailyView: React.FC = () => {
   const { clients, objectius, iniciatives, equips, fetchAll: fetchMasters } = useMastersStore();
 
   const [openNewAccioDialog, setOpenNewAccioDialog] = useState(false);
+  const [isCopyMode, setIsCopyMode] = useState(false);
   const [accioNom, setAccioNom] = useState('');
   const [accioClientId, setAccioClientId] = useState('');
   const [accioIniciativaId, setAccioIniciativaId] = useState('');
@@ -111,6 +113,32 @@ export const DailyView: React.FC = () => {
     }
   };
 
+  const handleOpenNewAccio = () => {
+    setIsCopyMode(false);
+    setAccioNom('');
+    setAccioClientId(clients[0]?.id || '');
+    setAccioIniciativaId('');
+    setAccioEquipId('');
+    setAccioExecutor('jo');
+    setAccioEtiquetes('');
+    setAccioDataPrevista('');
+    setOpenNewAccioDialog(true);
+  };
+
+  const handleOpenCopyAccio = (source: AccioWithStats) => {
+    setIsCopyMode(true);
+    setAccioNom(source.nom);
+    setAccioClientId(source.client_id || '');
+    setAccioIniciativaId(source.iniciativa_id || '');
+    setAccioEquipId(source.equip_id || '');
+    setAccioExecutor(source.executor || 'jo');
+    setAccioEtiquetes(source.etiquetes ? source.etiquetes.join(', ') : '');
+    setAccioDataPrevista(
+      source.data_prevista_tancament ? source.data_prevista_tancament.split('T')[0] : ''
+    );
+    setOpenNewAccioDialog(true);
+  };
+
   const handleCreateAccio = async () => {
     const tags = accioEtiquetes
       .split(',')
@@ -136,7 +164,12 @@ export const DailyView: React.FC = () => {
     setAccioExecutor('jo');
     setAccioEtiquetes('');
     setAccioDataPrevista('');
-    setSuccessToast(t('daily.createSuccess', "Nova acció donada d'alta amb èxit!"));
+    setSuccessToast(
+      isCopyMode
+        ? t('daily.copySuccess', "Acció copiada amb èxit (sense registres d'hores)!")
+        : t('daily.createSuccess', "Nova acció donada d'alta amb èxit!")
+    );
+    setIsCopyMode(false);
   };
 
   const toggleHistory = (id: string) => {
@@ -177,10 +210,7 @@ export const DailyView: React.FC = () => {
           <Button
             variant="contained"
             size="large"
-            onClick={() => {
-              setAccioClientId(clients[0]?.id || '');
-              setOpenNewAccioDialog(true);
-            }}
+            onClick={handleOpenNewAccio}
             sx={{ fontWeight: 600 }}
           >
             {t('daily.newActionBtn', '+ Nova Acció')}
@@ -247,9 +277,14 @@ export const DailyView: React.FC = () => {
         {accions.length === 0 ? (
           <Card sx={{ p: 5, textAlign: 'center', borderRadius: 2, color: 'text.secondary' }}>
             <Typography variant="h6">{t('daily.emptyState', 'No hi ha accions per mostrar amb aquests filtres.')}</Typography>
-            <Typography variant="body2" sx={{ mt: 1 }}>
+            <Button
+              variant="contained"
+              size="medium"
+              onClick={handleOpenNewAccio}
+              sx={{ mt: 2, fontWeight: 600 }}
+            >
               {t('daily.newActionBtn', '+ Nova Acció')}
-            </Typography>
+            </Button>
           </Card>
         ) : (
           <Stack spacing={2}>
@@ -335,6 +370,18 @@ export const DailyView: React.FC = () => {
                         {t('daily.logBtn', 'Imputar')}
                       </Button>
 
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        startIcon={<ContentCopyIcon />}
+                        onClick={() => handleOpenCopyAccio(a)}
+                        sx={{ fontWeight: 600, textTransform: 'none' }}
+                        title={t('daily.copyTooltip', "Copia aquesta acció (sense registres d'hores)")}
+                      >
+                        {t('daily.copyBtn', 'Copiar')}
+                      </Button>
+
                       {a.estat !== 'tancat' ? (
                         <Button
                           variant="outlined"
@@ -404,9 +451,13 @@ export const DailyView: React.FC = () => {
         )}
       </Container>
 
-      {/* DIALOG: NOVA ACCIÓ */}
+      {/* DIALOG: NOVA / COPIAR ACCIÓ */}
       <Dialog open={openNewAccioDialog} onClose={() => setOpenNewAccioDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{t('daily.newActionDialogTitle', "Donar d'Alta Nova Acció")}</DialogTitle>
+        <DialogTitle>
+          {isCopyMode
+            ? t('daily.copyActionDialogTitle', "Copiar / Duplicar Acció")
+            : t('daily.newActionDialogTitle', "Donar d'Alta Nova Acció")}
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -519,7 +570,9 @@ export const DailyView: React.FC = () => {
         <DialogActions sx={{ px: 3, pb: 2 }}>
           <Button onClick={() => setOpenNewAccioDialog(false)}>{t('common.cancel', 'Cancel·lar')}</Button>
           <Button variant="contained" onClick={handleCreateAccio} disabled={!accioNom || (!accioClientId && !accioIniciativaId)}>
-            {t('daily.createActionSubmit', 'Crear Acció')}
+            {isCopyMode
+              ? t('daily.copyActionSubmit', 'Crear Còpia')
+              : t('daily.createActionSubmit', 'Crear Acció')}
           </Button>
         </DialogActions>
       </Dialog>

@@ -6,6 +6,14 @@ i aquest projecte adhereix a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-09-08
+
+### Added
+- **Duplicació / Còpia d'Accions a la Vista Diària**:
+  - Nou botó `Copiar` a la barra d'accions de cada targeta de la Vista Diària.
+  - Modal pre-emplenat que permet editar lliurement qualsevol camp (nom, client, iniciativa, equip, executor, etiquetes, data de tancament) abans de desar.
+  - La nova acció es crea neta sense registres ni hores prèvies.
+
 ## [1.1.0] - 2026-09-08
 
 ### Added
