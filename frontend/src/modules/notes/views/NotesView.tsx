@@ -178,19 +178,29 @@ export const NotesView: React.FC = () => {
     await deleteNote(selectedNoteId);
   };
 
-  // Text selection handler
-  const handleSelection = () => {
-    const selection = window.getSelection();
-    if (!selection || selection.isCollapsed) {
-      setSelectedText('');
-      return;
+  // Text selection handler (supports both HTML textarea and DOM selection)
+  const handleSelection = (e?: React.SyntheticEvent<HTMLTextAreaElement | HTMLInputElement | HTMLElement>) => {
+    let text = '';
+    if (e && 'target' in e) {
+      const target = e.target as HTMLTextAreaElement;
+      if (target && typeof target.selectionStart === 'number' && typeof target.selectionEnd === 'number') {
+        const start = target.selectionStart;
+        const end = target.selectionEnd;
+        if (end > start) {
+          text = target.value.substring(start, end).trim();
+        }
+      }
     }
 
-    const text = selection.toString().trim();
-    if (text.length >= 3) {
+    if (!text) {
+      const windowSel = window.getSelection()?.toString().trim();
+      if (windowSel) {
+        text = windowSel;
+      }
+    }
+
+    if (text.length >= 2) {
       setSelectedText(text);
-    } else {
-      setSelectedText('');
     }
   };
 
@@ -450,6 +460,18 @@ export const NotesView: React.FC = () => {
                     />
 
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {selectedText && (
+                        <Button
+                          variant="contained"
+                          color="warning"
+                          size="small"
+                          startIcon={<FlashOnIcon />}
+                          onClick={handleOpenActionDialogFromSelection}
+                          sx={{ textTransform: 'none', fontWeight: 700 }}
+                        >
+                          {t('notes.createActionBtn', 'Crear Acció')}
+                        </Button>
+                      )}
                       {saveSuccess && (
                         <Chip
                           icon={<CheckCircleOutlineIcon fontSize="small" />}
@@ -504,7 +526,7 @@ export const NotesView: React.FC = () => {
                   </Box>
                 </Box>
 
-                {/* Floating Banner / Popover for Text Selection */}
+                {/* Floating Banner for Text Selection */}
                 {selectedText && (
                   <Box
                     sx={{
@@ -512,34 +534,39 @@ export const NotesView: React.FC = () => {
                       top: 0,
                       zIndex: 10,
                       bgcolor: '#fff9c4',
-                      borderBottom: '1px solid #ffe082',
+                      borderBottom: '2px solid #fbc02d',
                       px: 3,
-                      py: 1.2,
+                      py: 1.5,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                      boxShadow: '0 3px 10px rgba(0,0,0,0.1)',
                       animation: 'fadeIn 0.2s ease-in-out',
                     }}
                   >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, overflow: 'hidden' }}>
-                      <FlashOnIcon sx={{ color: '#f57f17' }} />
-                      <Typography variant="body2" fontWeight={600} noWrap sx={{ maxWidth: { xs: 200, sm: 400, md: 600 } }}>
-                        "{selectedText}"
-                      </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, overflow: 'hidden' }}>
+                      <FlashOnIcon sx={{ color: '#f57f17', fontSize: 24 }} />
+                      <Box sx={{ overflow: 'hidden' }}>
+                        <Typography variant="caption" color="text.secondary" fontWeight={600} display="block">
+                          {t('notes.selectedTextLabel', 'Text seleccionat per crear acció:')}
+                        </Typography>
+                        <Typography variant="body2" fontWeight={700} color="text.primary" noWrap sx={{ maxWidth: { xs: 200, sm: 400, md: 600 } }}>
+                          "{selectedText}"
+                        </Typography>
+                      </Box>
                     </Box>
 
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       <Button
                         variant="contained"
                         color="warning"
-                        size="small"
+                        size="medium"
                         startIcon={<FlashOnIcon />}
                         onClick={handleOpenActionDialogFromSelection}
                         sx={{
                           fontWeight: 700,
                           textTransform: 'none',
-                          boxShadow: '0 2px 6px rgba(245, 127, 23, 0.3)',
+                          boxShadow: '0 2px 8px rgba(245, 127, 23, 0.4)',
                         }}
                       >
                         {t('notes.createActionBtn', 'Crear Acció')}
@@ -554,8 +581,6 @@ export const NotesView: React.FC = () => {
                 {/* Content Textarea */}
                 <Box
                   ref={contentAreaRef}
-                  onMouseUp={handleSelection}
-                  onKeyUp={handleSelection}
                   sx={{ flexGrow: 1, p: 3, display: 'flex', flexDirection: 'column' }}
                 >
                   <TextField
@@ -567,6 +592,12 @@ export const NotesView: React.FC = () => {
                     placeholder={t('notes.contentPlaceholder', 'Escriu aquí els teus apunts, temes tractats, decisions de la reunió...\n\n💡 Consell: Selecciona qualsevol frase o fragment per crear automàticament una nova Acció de seguiment!')}
                     value={activeContent}
                     onChange={(e) => handleContentChange(e.target.value)}
+                    inputProps={{
+                      onSelect: (e: any) => handleSelection(e),
+                      onMouseUp: (e: any) => handleSelection(e),
+                      onKeyUp: (e: any) => handleSelection(e),
+                      onPointerUp: (e: any) => handleSelection(e),
+                    }}
                     InputProps={{
                       disableUnderline: true,
                       sx: {

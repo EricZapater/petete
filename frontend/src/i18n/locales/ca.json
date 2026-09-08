@@ -201,6 +201,7 @@
     "noClientGeneral": "-- General / Sense Client --",
     "lastUpdated": "Última edició: {{date}}",
     "createActionBtn": "Crear Acció",
+    "selectedTextLabel": "Text seleccionat per crear acció:",
     "contentPlaceholder": "Escriu aquí els teus apunts, temes tractats, decisions de la reunió...\n\n💡 Consell: Selecciona qualsevol frase o fragment per crear automàticament una nova Acció de seguiment!",
     "noNoteSelectedTitle": "Cap nota seleccionada",
     "noNoteSelectedSubtitle": "Selecciona una nota de la barra lateral o crea'n una de nova per començar a prendre apunts.",

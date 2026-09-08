@@ -201,6 +201,7 @@
     "noClientGeneral": "-- General / No Client --",
     "lastUpdated": "Last updated: {{date}}",
     "createActionBtn": "Create Action",
+    "selectedTextLabel": "Selected text to create action:",
     "contentPlaceholder": "Write down meeting notes, discussion points, action items...\n\n💡 Tip: Highlight any sentence or text snippet to automatically create a new tracking Action!",
     "noNoteSelectedTitle": "No note selected",
     "noNoteSelectedSubtitle": "Select a note from the sidebar or create a new one to start taking notes.",

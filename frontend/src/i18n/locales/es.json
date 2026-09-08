@@ -201,6 +201,7 @@
     "noClientGeneral": "-- General / Sin Cliente --",
     "lastUpdated": "Última edición: {{date}}",
     "createActionBtn": "Crear Acción",
+    "selectedTextLabel": "Texto seleccionado para crear acción:",
     "contentPlaceholder": "Escribe aquí tus apuntes, temas tratados, decisiones de la reunión...\n\n💡 Consejo: ¡Selecciona cualquier frase o fragmento para crear automáticamente una nueva Acción de seguimiento!",
     "noNoteSelectedTitle": "Ninguna nota seleccionada",
     "noNoteSelectedSubtitle": "Selecciona una nota de la barra lateral o crea una nueva para empezar a tomar notas.",
