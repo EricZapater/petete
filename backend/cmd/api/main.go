@@ -10,6 +10,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"petete/backend/internal/accio"
+	"petete/backend/internal/admin"
 	"petete/backend/internal/auth"
 	"petete/backend/internal/client"
 	"petete/backend/internal/db"
@@ -97,6 +98,18 @@ func main() {
 	// API v1
 	v1 := r.Group("/api/v1")
 	if database != nil {
+		// Admin module & Audit Middleware
+		adminRepo := admin.NewRepository(database)
+		adminService := admin.NewService(adminRepo)
+		defer adminService.Stop()
+		adminHandler := admin.NewHandler(adminService)
+
+		// Attach global audit logging to all v1 endpoints
+		v1.Use(admin.AuditMiddleware(adminService))
+
+		// Admin routes (Protected by auth + admin email check)
+		adminHandler.RegisterRoutes(v1, authMiddleware, admin.RequireAdminEmail())
+
 		// Auth
 		authRepo := auth.NewRepository(database)
 		authService := auth.NewService(authRepo, jwtManager)

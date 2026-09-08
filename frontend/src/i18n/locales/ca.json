@@ -8,6 +8,7 @@
     "notes": "Notes",
     "reports": "Informes",
     "masters": "Mestres",
+    "admin": "Admin",
     "profile": "El meu perfil",
     "subtitle": "Personal Time Tracker"
   },
@@ -208,6 +209,79 @@
     "createActionDialogTitle": "Nova Acció de Seguiment des de la Nota",
     "actionCreatedSuccess": "Acció creada amb èxit a partir de la selecció!",
     "goToDaily": "Anar a Vista Diària"
+  },
+  "admin": {
+    "title": "Consola d'Administració & Observabilitat",
+    "authorizedUser": "Autoritzat exclusivament per a",
+    "fetchError": "Error carregant dades d'administració",
+    "exportError": "Error en descarregar el fitxer CSV d'auditoria",
+    "tabs": {
+      "usage": "Mètriques d'Ús (KPIs)",
+      "observability": "Salut del Sistema & API",
+      "auditLogs": "Registre d'Auditoria (Logs)"
+    },
+    "kpis": {
+      "users": "Usuaris Registrats",
+      "active30d": "actius darrers 30 dies",
+      "hoursTracked": "Hores Totals Imputades",
+      "thisMonth": "aquest mes",
+      "actions": "Accions Creades",
+      "mastersAndNotes": "Mestres & Notes"
+    },
+    "topInitiatives": "Top Iniciatives per Dedicació d'Hores",
+    "noInitiativesData": "Encara no hi ha dades d'hores imputades a iniciatives",
+    "topClients": "Top Clients per Volum d'Hores",
+    "noClientsData": "Encara no hi ha dades d'hores imputades per client",
+    "health": {
+      "goRuntime": "Go Runtime & Servidor API",
+      "uptime": "Temps d'activitat (Uptime)",
+      "goroutines": "Goroutines Actives",
+      "memoryAlloc": "Memòria RAM (Alloc / Sys)",
+      "gcCycles": "Cicles de Garbage Collection",
+      "dbPool": "Pool de Connexions PostgreSQL",
+      "dbOpen": "Connexions Obertes",
+      "dbInUse": "En Ús / Actives",
+      "dbIdle": "Inactives (Idle)",
+      "dbWaitCount": "Peticions en Espera de Connexió"
+    },
+    "perf": {
+      "totalRequests": "Peticions Totals",
+      "errorRate": "Taxa d'Error",
+      "avgLatency": "Latència Mitjana",
+      "percentiles": "Percentils p95 / p99",
+      "endpointsTitle": "Rendiment Detallat per Endpoint"
+    },
+    "table": {
+      "initiative": "Iniciativa",
+      "client": "Client",
+      "hours": "Hores",
+      "initiatives": "Iniciatives",
+      "actions": "Accions",
+      "method": "Mètode",
+      "endpoint": "Endpoint",
+      "requests": "Peticions",
+      "avgDuration": "Mitjana",
+      "p95Duration": "p95",
+      "p99Duration": "p99",
+      "errorRate": "Error %",
+      "timestamp": "Data / Hora",
+      "user": "Usuari",
+      "action": "Acció",
+      "module": "Mòdul",
+      "status": "Estat",
+      "duration": "Durada",
+      "ip": "IP"
+    },
+    "noApiData": "Encara no s'han registrat crides d'API",
+    "auditLogsTitle": "Historial d'Auditoria en Temps Real",
+    "exportCSV": "Exportar CSV",
+    "searchLogsPlaceholder": "Cercar acció, endpoint, usuari...",
+    "filterModule": "Mòdul",
+    "allModules": "Tots els Mòduls",
+    "filterStatus": "Estat HTTP",
+    "allStatuses": "Tots els Estats",
+    "noAuditLogs": "No s'han trobat registres d'auditoria amb els filtres actuals",
+    "paginationInfo": "Pàgina {{page}} de {{totalPages}} (Total: {{total}} registres)"
   },
   "languages": {
     "ca": "Català",

@@ -8,6 +8,7 @@
     "notes": "Notas",
     "reports": "Informes",
     "masters": "Maestros",
+    "admin": "Admin",
     "profile": "Mi perfil",
     "subtitle": "Personal Time Tracker"
   },
@@ -208,6 +209,79 @@
     "createActionDialogTitle": "Nueva Acción de Seguimiento desde la Nota",
     "actionCreatedSuccess": "¡Acción creada con éxito a partir de la selección!",
     "goToDaily": "Ir a Vista Diaria"
+  },
+  "admin": {
+    "title": "Consola de Administración & Observabilidad",
+    "authorizedUser": "Autorizado exclusivamente para",
+    "fetchError": "Error al cargar datos de administración",
+    "exportError": "Error al descargar el archivo CSV de auditoría",
+    "tabs": {
+      "usage": "Métricas de Uso (KPIs)",
+      "observability": "Salud del Sistema & API",
+      "auditLogs": "Registro de Auditoría (Logs)"
+    },
+    "kpis": {
+      "users": "Usuarios Registrados",
+      "active30d": "activos últimos 30 días",
+      "hoursTracked": "Horas Totales Imputadas",
+      "thisMonth": "este mes",
+      "actions": "Acciones Creadas",
+      "mastersAndNotes": "Maestros & Notas"
+    },
+    "topInitiatives": "Top Iniciativas por Dedicación de Horas",
+    "noInitiativesData": "Aún no hay datos de horas imputadas a iniciativas",
+    "topClients": "Top Clientes por Volumen de Horas",
+    "noClientsData": "Aún no hay datos de horas imputadas por cliente",
+    "health": {
+      "goRuntime": "Go Runtime & Servidor API",
+      "uptime": "Tiempo de actividad (Uptime)",
+      "goroutines": "Goroutines Activas",
+      "memoryAlloc": "Memoria RAM (Alloc / Sys)",
+      "gcCycles": "Ciclos de Garbage Collection",
+      "dbPool": "Pool de Conexiones PostgreSQL",
+      "dbOpen": "Conexiones Abiertas",
+      "dbInUse": "En Uso / Activas",
+      "dbIdle": "Inactivas (Idle)",
+      "dbWaitCount": "Peticiones en Espera de Conexión"
+    },
+    "perf": {
+      "totalRequests": "Peticiones Totales",
+      "errorRate": "Tasa de Error",
+      "avgLatency": "Latencia Media",
+      "percentiles": "Percentiles p95 / p99",
+      "endpointsTitle": "Rendimiento Detallado por Endpoint"
+    },
+    "table": {
+      "initiative": "Iniciativa",
+      "client": "Cliente",
+      "hours": "Horas",
+      "initiatives": "Iniciativas",
+      "actions": "Acciones",
+      "method": "Método",
+      "endpoint": "Endpoint",
+      "requests": "Peticiones",
+      "avgDuration": "Media",
+      "p95Duration": "p95",
+      "p99Duration": "p99",
+      "errorRate": "Error %",
+      "timestamp": "Fecha / Hora",
+      "user": "Usuario",
+      "action": "Acción",
+      "module": "Módulo",
+      "status": "Estado",
+      "duration": "Duración",
+      "ip": "IP"
+    },
+    "noApiData": "Aún no se han registrado llamadas de API",
+    "auditLogsTitle": "Historial de Auditoría en Tiempo Real",
+    "exportCSV": "Exportar CSV",
+    "searchLogsPlaceholder": "Buscar acción, endpoint, usuario...",
+    "filterModule": "Módulo",
+    "allModules": "Todos los Módulos",
+    "filterStatus": "Estado HTTP",
+    "allStatuses": "Todos los Estados",
+    "noAuditLogs": "No se encontraron registros de auditoría con los filtros actuales",
+    "paginationInfo": "Página {{page}} de {{totalPages}} (Total: {{total}} registros)"
   },
   "languages": {
     "ca": "Català",

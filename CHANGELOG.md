@@ -6,6 +6,15 @@ i aquest projecte adhereix a [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-08
+
+### Added
+- **Mòdul 5 & Observabilitat (Consola d'Administració, Mètriques d'Ús & Audit Logs)**:
+  - Control d'accés exclusiu per a `hola@ericzapater.cat` via middleware Go (`RequireAdminEmail`) i ruta protegida a React (`/admin`).
+  - Backend Go: Registre d'auditoria asíncron (`audit_logs`) amb cues no bloquejants a Gin, mètriques del runtime Go (RAM, Uptime, Goroutines), mètriques del pool de PostgreSQL i exportació d'auditoria a fitxer CSV.
+  - Frontend React: `AdminDashboardView.tsx` amb 3 pestanyes interactives (Mètriques d'Ús i KPIs de la plataforma, Salut del Sistema & Rendiment d'API amb percentils p95/p99, i Registre d'Auditoria en temps real amb cerca, filtres i descàrrega CSV).
+  - Suport multiidioma i18n (`ca`, `es`, `en`) integrat per a tot el panell d'administració.
+
 ## [1.0.0] - 2026-09-07
 
 ### Added

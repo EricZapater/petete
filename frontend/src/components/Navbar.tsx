@@ -140,6 +140,29 @@ export const Navbar: React.FC = () => {
             {t('nav.masters', 'Mestres')}
           </Button>
 
+          {user?.email === 'hola@ericzapater.cat' && (
+            <Button
+              component={RouterLink}
+              to="/admin"
+              sx={{
+                color: isActive('/admin') ? '#38bdf8' : 'rgba(56, 189, 248, 0.9)',
+                backgroundColor: isActive('/admin') ? 'rgba(56, 189, 248, 0.2)' : 'rgba(56, 189, 248, 0.1)',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                fontWeight: isActive('/admin') ? 700 : 600,
+                borderRadius: 1.5,
+                textTransform: 'none',
+                fontSize: '0.9rem',
+                px: 1.5,
+                '&:hover': {
+                  backgroundColor: 'rgba(56, 189, 248, 0.25)',
+                  borderColor: '#38bdf8',
+                },
+              }}
+            >
+              🛡️ {t('nav.admin', 'Admin')}
+            </Button>
+          )}
+
           {/* User Profile Avatar */}
           <Tooltip title={user?.nom ? `${user.nom} (${t('nav.profile', 'Perfil')})` : t('nav.profile', 'El meu perfil')}>
             <IconButton
