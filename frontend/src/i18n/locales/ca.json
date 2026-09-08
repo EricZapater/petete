@@ -5,6 +5,7 @@
   },
   "nav": {
     "daily": "Vista Diària",
+    "notes": "Notes",
     "reports": "Informes",
     "masters": "Mestres",
     "profile": "El meu perfil",
@@ -182,6 +183,30 @@
     "rule4Text": "Aquest objectiu té iniciatives que encara no estan tancades. Vols tancar-lo de totes maneres?",
     "confirmCloseBtn": "Sí, Tancar Objectiu",
     "confirmClose": "Confirmar Tancament"
+  },
+  "notes": {
+    "title": "Notes & Apunts",
+    "newNoteBtn": "+ Nova Nota",
+    "searchPlaceholder": "Cercar notes...",
+    "allClientsFilter": "Tots els clients",
+    "noNotesFound": "No s'ha trobat cap nota.",
+    "createFirstNote": "Crear la primera nota",
+    "untitled": "Sense Títol",
+    "defaultNoteTitle": "Nova Nota",
+    "emptyContent": "Nota buida...",
+    "generalNote": "General",
+    "titlePlaceholder": "Títol de la nota o reunió...",
+    "savedStatus": "Desat",
+    "deleteNote": "Eliminar Nota",
+    "noClientGeneral": "-- General / Sense Client --",
+    "lastUpdated": "Última edició: {{date}}",
+    "createActionBtn": "Crear Acció",
+    "contentPlaceholder": "Escriu aquí els teus apunts, temes tractats, decisions de la reunió...\n\n💡 Consell: Selecciona qualsevol frase o fragment per crear automàticament una nova Acció de seguiment!",
+    "noNoteSelectedTitle": "Cap nota seleccionada",
+    "noNoteSelectedSubtitle": "Selecciona una nota de la barra lateral o crea'n una de nova per començar a prendre apunts.",
+    "createActionDialogTitle": "Nova Acció de Seguiment des de la Nota",
+    "actionCreatedSuccess": "Acció creada amb èxit a partir de la selecció!",
+    "goToDaily": "Anar a Vista Diària"
   },
   "languages": {
     "ca": "Català",

@@ -5,6 +5,7 @@
   },
   "nav": {
     "daily": "Vista Diaria",
+    "notes": "Notas",
     "reports": "Informes",
     "masters": "Maestros",
     "profile": "Mi perfil",
@@ -182,6 +183,30 @@
     "rule4Text": "Este objetivo tiene iniciativas que aún no están cerradas. ¿Deseas cerrarlo de todos modos?",
     "confirmCloseBtn": "Sí, Cerrar Objetivo",
     "confirmClose": "Confirmar Cierre"
+  },
+  "notes": {
+    "title": "Notas & Apuntes",
+    "newNoteBtn": "+ Nueva Nota",
+    "searchPlaceholder": "Buscar notas...",
+    "allClientsFilter": "Todos los clientes",
+    "noNotesFound": "No se encontró ninguna nota.",
+    "createFirstNote": "Crear la primera nota",
+    "untitled": "Sin Título",
+    "defaultNoteTitle": "Nueva Nota",
+    "emptyContent": "Nota vacía...",
+    "generalNote": "General",
+    "titlePlaceholder": "Título de la nota o reunión...",
+    "savedStatus": "Guardado",
+    "deleteNote": "Eliminar Nota",
+    "noClientGeneral": "-- General / Sin Cliente --",
+    "lastUpdated": "Última edición: {{date}}",
+    "createActionBtn": "Crear Acción",
+    "contentPlaceholder": "Escribe aquí tus apuntes, temas tratados, decisiones de la reunión...\n\n💡 Consejo: ¡Selecciona cualquier frase o fragmento para crear automáticamente una nueva Acción de seguimiento!",
+    "noNoteSelectedTitle": "Ninguna nota seleccionada",
+    "noNoteSelectedSubtitle": "Selecciona una nota de la barra lateral o crea una nueva para empezar a tomar notas.",
+    "createActionDialogTitle": "Nueva Acción de Seguimiento desde la Nota",
+    "actionCreatedSuccess": "¡Acción creada con éxito a partir de la selección!",
+    "goToDaily": "Ir a Vista Diaria"
   },
   "languages": {
     "ca": "Català",

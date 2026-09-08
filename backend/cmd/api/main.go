@@ -17,6 +17,7 @@ import (
 	"petete/backend/internal/informe"
 	"petete/backend/internal/iniciativa"
 	"petete/backend/internal/metrica"
+	"petete/backend/internal/nota"
 	"petete/backend/internal/objectiu"
 	"petete/backend/internal/registre"
 	"petete/backend/internal/shared"
@@ -149,6 +150,12 @@ func main() {
 		informeService := informe.NewService(informeRepo)
 		informeHandler := informe.NewHandler(informeService)
 		informeHandler.RegisterRoutes(v1, authMiddleware)
+
+		// Notes
+		notaRepo := nota.NewRepository(database)
+		notaService := nota.NewService(notaRepo)
+		notaHandler := nota.NewHandler(notaService)
+		notaHandler.RegisterRoutes(v1, authMiddleware)
 	}
 
 	log.Printf("Servidor Petete escoltant al port :%s", port)

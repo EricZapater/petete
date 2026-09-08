@@ -5,6 +5,7 @@
   },
   "nav": {
     "daily": "Daily View",
+    "notes": "Notes",
     "reports": "Reports",
     "masters": "Masters",
     "profile": "My Profile",
@@ -182,6 +183,30 @@
     "rule4Text": "This objective has initiatives that are not yet closed. Do you want to close it anyway?",
     "confirmCloseBtn": "Yes, Close Objective",
     "confirmClose": "Confirm Close"
+  },
+  "notes": {
+    "title": "Notes & Meeting Log",
+    "newNoteBtn": "+ New Note",
+    "searchPlaceholder": "Search notes...",
+    "allClientsFilter": "All clients",
+    "noNotesFound": "No notes found.",
+    "createFirstNote": "Create first note",
+    "untitled": "Untitled",
+    "defaultNoteTitle": "New Note",
+    "emptyContent": "Empty note...",
+    "generalNote": "General",
+    "titlePlaceholder": "Note or meeting title...",
+    "savedStatus": "Saved",
+    "deleteNote": "Delete Note",
+    "noClientGeneral": "-- General / No Client --",
+    "lastUpdated": "Last updated: {{date}}",
+    "createActionBtn": "Create Action",
+    "contentPlaceholder": "Write down meeting notes, discussion points, action items...\n\n💡 Tip: Highlight any sentence or text snippet to automatically create a new tracking Action!",
+    "noNoteSelectedTitle": "No note selected",
+    "noNoteSelectedSubtitle": "Select a note from the sidebar or create a new one to start taking notes.",
+    "createActionDialogTitle": "New Tracking Action from Note",
+    "actionCreatedSuccess": "Action created successfully from selection!",
+    "goToDaily": "Go to Daily View"
   },
   "languages": {
     "ca": "Català",

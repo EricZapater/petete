@@ -1,0 +1,2 @@
+-- Migration 000006 Down
+DROP TABLE IF EXISTS notes CASCADE;

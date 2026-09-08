@@ -4,6 +4,7 @@ import { LoginView } from '../modules/auth/views/LoginView';
 import { RegisterView } from '../modules/auth/views/RegisterView';
 import { ProfileView } from '../modules/auth/views/ProfileView';
 import { DailyView } from '../modules/daily/views/DailyView';
+import { NotesView } from '../modules/notes/views/NotesView';
 import { ReportsView } from '../modules/reports/views/ReportsView';
 import { MastersView } from '../modules/masters/views/MastersView';
 import { ProtectedRoute } from '../components/ProtectedRoute';
@@ -19,6 +20,7 @@ export const AppRouter: React.FC = () => {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/daily" element={<DailyView />} />
+          <Route path="/notes" element={<NotesView />} />
           <Route path="/reports" element={<ReportsView />} />
           <Route path="/masters" element={<MastersView />} />
           <Route path="/profile" element={<ProfileView />} />

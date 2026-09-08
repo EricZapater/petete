@@ -85,6 +85,25 @@ export const Navbar: React.FC = () => {
 
           <Button
             component={RouterLink}
+            to="/notes"
+            sx={{
+              color: isActive('/notes') ? '#ffffff' : 'rgba(255, 255, 255, 0.8)',
+              backgroundColor: isActive('/notes') ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
+              fontWeight: isActive('/notes') ? 700 : 500,
+              borderRadius: 1.5,
+              textTransform: 'none',
+              fontSize: '0.95rem',
+              px: 1.5,
+              '&:hover': {
+                backgroundColor: 'rgba(255, 255, 255, 0.25)',
+              },
+            }}
+          >
+            {t('nav.notes', 'Notes')}
+          </Button>
+
+          <Button
+            component={RouterLink}
             to="/reports"
             sx={{
               color: isActive('/reports') ? '#ffffff' : 'rgba(255, 255, 255, 0.8)',
